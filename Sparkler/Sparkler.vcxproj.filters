@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{c6daa391-9c50-4f7c-b0b3-0c4747f27ba6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources">
+      <UniqueIdentifier>{8f271e6e-f859-4957-a727-0bf68ef7c075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\backends">
+      <UniqueIdentifier>{252bfe01-ea95-4156-aa65-f3be04ac7b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl3w">
+      <UniqueIdentifier>{6bc89c3a-9086-4927-9f83-d903aeea7862}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\backends\imgui_impl_glfw.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Sparkler.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\gl3w\GL\gl3w.c">
+      <Filter>gl3w</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\backends\imgui_impl_glfw.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\backends\imgui_impl_opengl3.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gl3w\GL\gl3w.h">
+      <Filter>gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gl3w\GL\glcorearb.h">
+      <Filter>gl3w</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
