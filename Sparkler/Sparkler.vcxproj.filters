@@ -11,7 +11,10 @@
       <UniqueIdentifier>{252bfe01-ea95-4156-aa65-f3be04ac7b34}</UniqueIdentifier>
     </Filter>
     <Filter Include="gl3w">
-      <UniqueIdentifier>{6bc89c3a-9086-4927-9f83-d903aeea7862}</UniqueIdentifier>
+      <UniqueIdentifier>{25853280-c577-4418-9234-9fdfc6da9f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glad">
+      <UniqueIdentifier>{e4cb85a3-c872-4c8a-a3dc-20df4e0f8bb8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="libs\gl3w\GL\gl3w.c">
       <Filter>gl3w</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\glad\glad.c">
+      <Filter>glad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -72,8 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>libs\glfw\include;libs\gl3w;imgui;sources;sources\backends;$(IncludePath)</IncludePath>
-    <ExcludePath>libs\glfw\include;libs\gl3w;imgui;sources;sources\backends;$(ExcludePath)</ExcludePath>
+    <IncludePath>libs\glfw\include;libs;libs\gl3w;imgui;sources;sources\backends;$(IncludePath)</IncludePath>
+    <ExcludePath>$(ExcludePath)</ExcludePath>
+    <LibraryPath>libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -90,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);F:\repositories\Sparkler\Sparkler\libs\glfw\include;F:\repositories\Sparkler\Sparkler\libs\gl3w;F:\repositories\Sparkler\Sparkler\sources\backends;F:\repositories\Sparkler\Sparkler\sources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);libs\glfw\include;libs;libs\gl3w; sources\backends;sources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +152,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="libs\gl3w\GL\gl3w.c" />
+    <ClCompile Include="libs\glad\glad.c" />
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Sparkler.cpp" />
