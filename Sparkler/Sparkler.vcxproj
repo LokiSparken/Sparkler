@@ -155,7 +155,7 @@
     <ClCompile Include="libs\glad\glad.c" />
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="sparkler.cpp" />
+    <ClCompile Include="sources\sparkler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />

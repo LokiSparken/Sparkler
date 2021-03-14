@@ -1,13 +1,12 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <stdio.h>
-#include <iostream>
-
+#include "..\misc\fonts\IconsFontAwesome5.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "misc\fonts\IconsFontAwesome5.h"
+#include <stdio.h>
+#include <iostream>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -16,17 +15,29 @@
 const char* vertexShaderCode = 
 "#version 330 core\n"
 "layout (location = 0) in vec3 pos;\n"
+"layout (location = 1) in vec3 col;\n"
+"out vec4 color;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);\n"
+"    color = vec4(col.x, col.y, col.z, 1.0);\n"
+"    gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);\n"
 "}\0";
 
 const char* fragmentShaderCode = 
 "#version 330 core\n"
+"in vec4 color;\n"
 "out vec4 fragColor;\n"
 "void main()\n"
 "{\n"
-"   fragColor = vec4(0.39f, 0.58f, 0.93f, 1.0f);\n"
+"    fragColor = color;\n"
+"}\n\0";
+
+const char* fragmentShaderPracticeCode =
+"#version 330 core\n"
+"out vec4 fragColor;\n"
+"void main()\n"
+"{\n"
+"    fragColor = vec4(0.0f, 0.0f, 1.0f, 1.0f);\n"
 "}\n\0";
 
 static void glfw_error_callback(int error, const char* description)
@@ -134,26 +145,17 @@ int main(int, char**)
 
 		// Hello, Triangle
 		// Step 1. Define vertices data and store into VRAM
-		float vertices[] = { 
-								-0.5f, -0.5f, 0.0f,
-								 0.5f, -0.5f, 0.0f,
-								 0.0f,  0.5f, 0.0f
-						   };
-
-		unsigned int VBO;
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		// Step 2. Define the vertex shader - vertexShaderCode
 		// Step 3. Define the fragment shader - fragmentShaderCode
 		// Step 4. Compile the shaders
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		unsigned int fragmentShaderPractice = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(vertexShader, 1, &vertexShaderCode, nullptr);
 		glShaderSource(fragmentShader, 1, &fragmentShaderCode, nullptr);
+		glShaderSource(fragmentShaderPractice, 1, &fragmentShaderPracticeCode, nullptr);
 		glCompileShader(vertexShader);
-		glCompileShader(fragmentShader);
 		int success;
 		char infoLog[512];
 		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -164,10 +166,20 @@ int main(int, char**)
 					  << infoLog
 					  << std::endl;
 		}
+		glCompileShader(fragmentShader);
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
 			glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
+			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
+					  << infoLog
+					  << std::endl;
+		}
+		glCompileShader(fragmentShaderPractice);
+		glGetShaderiv(fragmentShaderPractice, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(fragmentShaderPractice, 512, nullptr, infoLog);
 			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
 					  << infoLog
 					  << std::endl;
@@ -185,15 +197,84 @@ int main(int, char**)
   					  << infoLog
 					  << std::endl;
 		}
-		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
+		unsigned int shaderProgramPractice = glCreateProgram();
+		glAttachShader(shaderProgramPractice, vertexShader);
+		glAttachShader(shaderProgramPractice, fragmentShaderPractice);
+		glLinkProgram(shaderProgramPractice);
+		glGetProgramiv(shaderProgramPractice, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+			std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n"
+				  	  << infoLog
+					  << std::endl;
+		}
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShaderPractice);
+
+
 		// Step 6. Link vertex attribute
-		unsigned int VAO;
+		float vertices[] = { 
+								-0.5f, -0.5f, 0.0f,
+								 1.0f,  0.0f, 0.0f,
+								 0.5f, -0.5f, 0.0f,
+								 0.0f,  1.0f, 0.0f,
+								 0.0f,  0.5f, 0.0f,
+								 0.0f,  0.0f, 1.0f
+						   };
+
+		float smallTriangle[] = {
+									0.0f, 0.5f, 0.0f,
+									0.0f, 0.0f, 1.0f,
+								   -0.2f, 0.8f, 0.0f,
+									0.0f, 1.0f, 0.0f,
+									0.2f, 0.8f, 0.0f,
+									1.0f, 0.0f, 0.0f
+								};
+
+		float programPracticeTriangle[] = {
+											0.0f, 0.5f, 0.0f,
+											0.0f, 0.0f, 1.0f,
+											0.3f, 0.8f, 0.0f,
+											0.0f, 0.0f, 1.0f,
+											0.3f, 0.2f, 0.0f,
+											0.0f, 0.0f, 1.0f
+										  };
+
+		unsigned int VBO, smallTriangleVBO, practiceVBO;
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		unsigned int VAO, smallTriangleVAO, practiceVAO;
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
+		glEnableVertexAttribArray(1);
+
+		glGenBuffers(2, &smallTriangleVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, smallTriangleVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(smallTriangle), smallTriangle, GL_STATIC_DRAW);
+		glGenVertexArrays(2, &smallTriangleVAO);
+		glBindVertexArray(smallTriangleVAO);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
+		glEnableVertexAttribArray(1);
+
+		glGenBuffers(3, &practiceVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, practiceVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(programPracticeTriangle), programPracticeTriangle, GL_STATIC_DRAW);
+		glGenVertexArrays(3, &practiceVAO);
+		glBindVertexArray(practiceVAO);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
+		glEnableVertexAttribArray(1);
 
 		// Rendering
 		ImGui::Render();
@@ -205,6 +286,13 @@ int main(int, char**)
 
 		// Draw Triangle
 		glUseProgram(shaderProgram);
+		glBindVertexArray(smallTriangleVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glUseProgram(shaderProgramPractice);
+		glBindVertexArray(practiceVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
