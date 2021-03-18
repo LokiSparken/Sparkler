@@ -165,6 +165,15 @@
     <ClInclude Include="libs\gl3w\GL\glcorearb.h" />
     <ClInclude Include="sources\backends\imgui_impl_glfw.h" />
     <ClInclude Include="sources\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="sources\const.h" />
+    <ClInclude Include="sources\shader_class.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sources\shaders\simple_fragment_blue.frag" />
+    <None Include="sources\shaders\default_fragment_shader.frag" />
+    <None Include="sources\shaders\default_vertex_shader.vert" />
+    <None Include="sources\shaders\simple_fragment_shader.frag" />
+    <None Include="sources\shaders\simple_vertex_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

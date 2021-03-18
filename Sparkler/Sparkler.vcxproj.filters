@@ -74,5 +74,28 @@
     <ClInclude Include="libs\gl3w\GL\glcorearb.h">
       <Filter>gl3w</Filter>
     </ClInclude>
+    <ClInclude Include="sources\const.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader_class.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sources\shaders\default_fragment_shader.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\default_vertex_shader.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\simple_fragment_shader.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\simple_vertex_shader.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\simple_fragment_blue.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
