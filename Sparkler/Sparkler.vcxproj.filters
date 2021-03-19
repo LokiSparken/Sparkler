@@ -19,6 +19,9 @@
     <Filter Include="sources\shaders">
       <UniqueIdentifier>{108c06a5-c596-4d7b-b72c-941078886ab5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="includes">
+      <UniqueIdentifier>{eb78eaa4-b036-41c0-a00e-f1aa0df8f44c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -80,6 +83,9 @@
     <ClInclude Include="sources\shader_class.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="includes\stb_image.h">
+      <Filter>includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\default_fragment_shader.frag">
@@ -95,6 +101,15 @@
       <Filter>sources\shaders</Filter>
     </None>
     <None Include="sources\shaders\simple_fragment_blue.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\texture.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\texture.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\texture_mix.frag">
       <Filter>sources\shaders</Filter>
     </None>
   </ItemGroup>

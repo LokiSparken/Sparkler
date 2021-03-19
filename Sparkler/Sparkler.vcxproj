@@ -161,6 +161,7 @@
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="includes\stb_image.h" />
     <ClInclude Include="libs\gl3w\GL\gl3w.h" />
     <ClInclude Include="libs\gl3w\GL\glcorearb.h" />
     <ClInclude Include="sources\backends\imgui_impl_glfw.h" />
@@ -174,6 +175,9 @@
     <None Include="sources\shaders\default_vertex_shader.vert" />
     <None Include="sources\shaders\simple_fragment_shader.frag" />
     <None Include="sources\shaders\simple_vertex_shader.vert" />
+    <None Include="sources\shaders\texture.frag" />
+    <None Include="sources\shaders\texture.vert" />
+    <None Include="sources\shaders\texture_mix.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

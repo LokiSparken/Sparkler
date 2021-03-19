@@ -12,9 +12,14 @@
 #include "../sources/const.h"
 #include "../sources/shader_class.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../includes/stb_image.h"
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
+
+unsigned char* image;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -76,71 +81,84 @@ int GLFWMode()
 
 	// create, compile, link the shaders
 	std::string shaderFolder = "sources/shaders/";
-	Shader shader = Shader(shaderFolder + "simple_vertex_shader.vert", shaderFolder + "simple_fragment_shader.frag");
-	Shader shaderBlue = Shader(shaderFolder + "simple_vertex_shader.vert", shaderFolder + "simple_fragment_blue.frag");
+	Shader shader = Shader(shaderFolder + "texture.vert", shaderFolder + "texture_mix.frag");
 
-	// Hello, Triangle
-	// Step 1. Define vertices data and store into VRAM
-	// Step 6. Link vertex attribute
+	// Define vertices data and store into VRAM
+	// Link vertex attribute
 	float vertices[] = {
-							-0.5f, -0.5f, 0.0f,
-								1.0f,  0.0f, 0.0f,
-								0.5f, -0.5f, 0.0f,
-								0.0f,  1.0f, 0.0f,
-								0.0f,  0.5f, 0.0f,
-								0.0f,  0.0f, 1.0f
-	};
+							 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  2.0f, 2.0f,	// top right
+							 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,	// bottom right
+							-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,	// bottom left
+							-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 2.0f	// top left
+						};
 
-	float smallTriangle[] = {
-								0.0f, 0.5f, 0.0f,
-								0.0f, 0.0f, 1.0f,
-								-0.2f, 0.8f, 0.0f,
-								0.0f, 1.0f, 0.0f,
-								0.2f, 0.8f, 0.0f,
-								1.0f, 0.0f, 0.0f
-	};
+	int indices[] = { 0, 1, 3, 1, 2, 3 };
 
-	float programPracticeTriangle[] = {
-										0.0f, 0.5f, 0.0f,
-										0.0f, 0.0f, 1.0f,
-										0.3f, 0.8f, 0.0f,
-										0.0f, 0.0f, 1.0f,
-										0.3f, 0.2f, 0.0f,
-										0.0f, 0.0f, 1.0f
-	};
-
-	unsigned int VBO, smallTriangleVBO, practiceVBO;
+	unsigned int VAO, VBO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	unsigned int VAO, smallTriangleVAO, practiceVAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
-	glEnableVertexAttribArray(1);
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glGenBuffers(2, &smallTriangleVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, smallTriangleVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(smallTriangle), smallTriangle, GL_STATIC_DRAW);
-	glGenVertexArrays(2, &smallTriangleVAO);
-	glBindVertexArray(smallTriangleVAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
-	glGenBuffers(3, &practiceVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, practiceVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(programPracticeTriangle), programPracticeTriangle, GL_STATIC_DRAW);
-	glGenVertexArrays(3, &practiceVAO);
-	glBindVertexArray(practiceVAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
-	glEnableVertexAttribArray(1);
+	unsigned int texture1, texture2;
+	glGenTextures(1, &texture1);
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true);
+	image = stbi_load("resources/textures/container.jpg", &width, &height, &nrChannels, 0);
+	if (image)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "ERROR::TEXTURE::LOAD_FAILED" << std::endl;
+	}
+	stbi_image_free(image);
+
+	glGenTextures(1, &texture2);
+	//glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//image = stbi_load("resources/textures/awesomeface.png", &width, &height, &nrChannels, 0);
+	image = stbi_load("resources/textures/kitty.jpg", &width, &height, &nrChannels, 0);
+	//image = stbi_load("resources/textures/sizetest.png", &width, &height, &nrChannels, 0);
+	if (image)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "ERROR::TEXTURE2::LOAD_FAILED" << std::endl;
+	}
+	stbi_image_free(image);
+
+	shader.use();	// BE ATTENTION£¡£¡£¡
+	shader.setInt("texture1", 0);
+	shader.setInt("texture2", 1);
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -198,18 +216,17 @@ int GLFWMode()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw Triangle
-		shader.use();
-		glBindVertexArray(smallTriangleVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		shaderBlue.use();
-		glBindVertexArray(practiceVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		shader.use();
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 		glfwSwapBuffers(window);
 	}
 
