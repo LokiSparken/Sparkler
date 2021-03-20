@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>libs\glfw\include;libs;libs\gl3w;imgui;sources;sources\backends;$(IncludePath)</IncludePath>
+    <IncludePath>includes;libs\glfw\include;libs;libs\gl3w;imgui;sources;sources\backends;$(IncludePath)</IncludePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
     <LibraryPath>libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
