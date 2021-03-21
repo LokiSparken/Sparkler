@@ -15,6 +15,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../includes/stb_image.h"
 
+#include "../includes/glm/glm.hpp"
+#include "../includes/glm/gtc/matrix_transform.hpp"
+#include "../includes/glm/gtc/type_ptr.hpp"
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
@@ -25,6 +29,8 @@ static void glfw_error_callback(int error, const char* description)
 {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
+
+float blendValue = 0.6f;
 
 int GLFWMode()
 {
@@ -86,10 +92,10 @@ int GLFWMode()
 	// Define vertices data and store into VRAM
 	// Link vertex attribute
 	float vertices[] = {
-							 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  2.0f, 2.0f,	// top right
-							 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,	// bottom right
+							 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,	// top right
+							 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,	// bottom right
 							-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,	// bottom left
-							-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 2.0f	// top left
+							-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f	// top left
 						};
 
 	int indices[] = { 0, 1, 3, 1, 2, 3 };
@@ -138,7 +144,11 @@ int GLFWMode()
 	glGenTextures(1, &texture2);
 	//glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texture2);
+	float border_color_blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+	float border_color_green[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color_blue);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color_green);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -156,9 +166,24 @@ int GLFWMode()
 	}
 	stbi_image_free(image);
 
+	glm::mat4 trans = glm::mat4(1.0f);
+	//trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	//trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
 	shader.use();	// BE ATTENTION£¡£¡£¡
+
+	unsigned int transformLocation = glGetUniformLocation(shader.ID, "transform");
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+
+	unsigned int transformLeftTopLocation = glGetUniformLocation(shader.ID, "transform_left_top");
+
+	bool left_top = false;
+	unsigned int leftTopLocation = glGetUniformLocation(shader.ID, "left_top");
+
 	shader.setInt("texture1", 0);
 	shader.setInt("texture2", 1);
+
+	//shader.setFloat("blendValue", blendValue);
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -215,6 +240,12 @@ int GLFWMode()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// draw bottom right
+		trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+
 		// Draw Triangle
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
@@ -225,6 +256,16 @@ int GLFWMode()
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		// draw top left
+		trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+		float sin = fabs(glm::sin((float)glfwGetTime()));
+		//sin = glm::clamp(sin, 0.1f, 0.9f);
+		//std::cout << sin;
+		trans = glm::scale(trans, glm::vec3(sin, sin, sin));
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
@@ -243,5 +284,6 @@ int GLFWMode()
 int main(int, char**)
 {
 	GLFWMode();
+
 	return 0;
 }

@@ -1,4 +1,15 @@
-# 
+# Evolution of Sparkler
+## Environment
+
+Type | Version
+:--: | :--:
+Operating System | Windows 10
+Compiler | Visual C++ 2019
+GUI | ImGui 1.81
+Back-end | GLFW & OpenGL 3
+Maths | GLM 0.9.9.8
+
+## 
 
 ## 命名规范
 ### **1. 代码**
@@ -58,6 +69,9 @@
     #define CLASSNAME_H
     #endif // CLASSNAME_H
     ```
+
+# TODO Flag
+* Compare Areas
 
 <!-- TODO: 5. statements 之后 -->
 
