@@ -112,5 +112,8 @@
     <None Include="sources\shaders\texture_mix.frag">
       <Filter>sources\shaders</Filter>
     </None>
+    <None Include="sources\shaders\coordinate.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

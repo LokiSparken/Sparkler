@@ -12,9 +12,7 @@ out vec4 fragColor;
 
 void main()
 {
-//	fragColor = texture(texture2, texCoord);
 	fragColor = mix(texture(texture1, texCoord), texture(texture2, vec2(texCoord.x - 0.34f * texCoord.y, texCoord.y)), 0.6);
-//	fragColor = mix(texture(texture1, texCoord), texture(texture2, vec2(texCoord.x, texCoord.y)), 0.6);
-//	fragColor = mix(texture(texture1, texCoord), texture(texture2, vec2(texCoord.x - 0.34f * texCoord.y, texCoord.y)), blendValue);
-//	fragColor = vec4(color.xyz, 1.0f) * fragColor;
+//	fragColor = mix(texture(texture1, texCoord), texture(texture2, texCoord), 0.6);
+//	fragColor = texture(texture1, texCoord);
 }

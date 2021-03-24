@@ -170,6 +170,7 @@
     <ClInclude Include="sources\shader_class.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="sources\shaders\coordinate.vert" />
     <None Include="sources\shaders\simple_fragment_blue.frag" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
