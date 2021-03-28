@@ -80,11 +80,14 @@
     <ClInclude Include="sources\const.h">
       <Filter>sources</Filter>
     </ClInclude>
-    <ClInclude Include="sources\shader_class.h">
-      <Filter>sources</Filter>
-    </ClInclude>
     <ClInclude Include="includes\stb_image.h">
       <Filter>includes</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\camera.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader.h">
+      <Filter>sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -166,8 +166,9 @@
     <ClInclude Include="libs\gl3w\GL\glcorearb.h" />
     <ClInclude Include="sources\backends\imgui_impl_glfw.h" />
     <ClInclude Include="sources\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\const.h" />
-    <ClInclude Include="sources\shader_class.h" />
+    <ClInclude Include="sources\shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\coordinate.vert" />

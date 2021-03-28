@@ -19,6 +19,8 @@ const int SHADER_COMPILE_INFO_LOG_BUFFER_SIZE = 512;
 const std::string DEFAULT_VERTEX_SHADER_PATH = "sources/shaders/default_vertex_shader.vert";
 const std::string DEFAULT_FRAGMENT_SHADER_PATH = "sources/shaders/default_fragment_shader.frag";
 
+const float SENSITIVITY = 0.1f;
+
 #endif // CONST_H
 
 
