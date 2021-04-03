@@ -118,5 +118,17 @@
     <None Include="sources\shaders\coordinate.vert">
       <Filter>sources\shaders</Filter>
     </None>
+    <None Include="sources\shaders\light.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\light.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\light_test_cube.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\light_test_cube.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

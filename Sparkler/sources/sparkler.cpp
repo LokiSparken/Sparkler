@@ -83,64 +83,8 @@ int GlfwMode()
 	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	std::string shaderFolder = "sources/shaders/";
-	Shader shader = Shader(shaderFolder + "coordinate.vert", shaderFolder + "texture_mix.frag");
-
-	float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
+	Shader shader = Shader(shaderFolder + "light_test_cube.vert", shaderFolder + "light_test_cube.frag");
+	Shader lightShader = Shader(shaderFolder + "light.vert", shaderFolder + "light.frag");
 
 	unsigned int VAO, VBO;
 	glGenVertexArrays(1, &VAO);
@@ -148,76 +92,29 @@ int GlfwMode()
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 
-	unsigned int texture1, texture2;
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	int width, height, nrChannels;
-	stbi_set_flip_vertically_on_load(true);
-	image = stbi_load("resources/textures/container.jpg", &width, &height, &nrChannels, 0);
-	if (image)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "ERROR::TEXTURE::LOAD_FAILED" << std::endl;
-	}
-	stbi_image_free(image);
-
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	image = stbi_load("resources/textures/kitty.jpg", &width, &height, &nrChannels, 0);
-	if (image)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "ERROR::TEXTURE2::LOAD_FAILED" << std::endl;
-	}
-	stbi_image_free(image);
+	unsigned int lightVAO;
+	glGenVertexArrays(2, &lightVAO);
+	glBindVertexArray(lightVAO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
-
-	shader.use();	// BE ATTENTION£¡£¡£¡
-	shader.setInt("texture1", 0);
-	shader.setInt("texture2", 1);
-
-	unsigned int modelLocation = glGetUniformLocation(shader.ID, "model");
-	unsigned int viewLocation = glGetUniformLocation(shader.ID, "view");
-	unsigned int projectionLocation = glGetUniformLocation(shader.ID, "projection");
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// Poll and handle events (inputs, window resize, etc.)
 		glfwPollEvents();
-
-		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-		processInput(window);
-
-		// Demo window
 		if (show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
+
+		processInput(window);
 
 		// Create window - Console
 		{
@@ -244,7 +141,6 @@ int GlfwMode()
 			ImGui::End();
 		}
 
-
 		// Rendering
 		ImGui::Render();
 		int display_w, display_h;
@@ -253,47 +149,40 @@ int GlfwMode()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-		
-		// draw
+		// draw cube
 		shader.use();
+		unsigned int modelLocation_cube = glGetUniformLocation(shader.ID, "model");
+		unsigned int viewLocation_cube = glGetUniformLocation(shader.ID, "view");
+		unsigned int projectionLocation_cube = glGetUniformLocation(shader.ID, "projection");
 
-		//const float radius = 10.0f;
-		//float camX = sin(glfwGetTime()) * radius;
-		//float camZ = cos(glfwGetTime()) * radius;
-		//position = glm::vec3(camX, 0.0f, camZ);
-		//camera.setPosition(position);
+		glm::mat4 model_cube = glm::mat4(1.0f);
+		glUniformMatrix4fv(modelLocation_cube, 1, GL_FALSE, glm::value_ptr(model_cube));
 
 		camera.setViewMatrix();
 		glm::mat4 view = camera.getViewMatrix();
-		
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(viewLocation_cube, 1, GL_FALSE, glm::value_ptr(view));
 
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(camera.getFov()), 4.0f/3.0f, 0.1f, 100.0f);
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(projectionLocation_cube, 1, GL_FALSE, glm::value_ptr(projection));
 		
 		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		for (int i = 0; i < 10; ++i)
-		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(cubePositions[i]));
-			float angle = 20.0f * i;
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-			if (i % 3 == 0)
-			{
-				model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-			}
-
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		// draw light cube
+		lightShader.use();
+		unsigned int modelLocation_light = glGetUniformLocation(lightShader.ID, "model");
+		unsigned int viewLocation_light = glGetUniformLocation(lightShader.ID, "view");
+		unsigned int projectionLocation_light = glGetUniformLocation(lightShader.ID, "projection");
+		glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
+		glm::mat4 model_light = glm::mat4(1.0f);
+		model_light = glm::translate(model_light, lightPosition);
+		model_light = glm::scale(model_light, glm::vec3(0.1f));
+		glUniformMatrix4fv(modelLocation_light, 1, GL_FALSE, glm::value_ptr(model_light));
+		glUniformMatrix4fv(viewLocation_light, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projectionLocation_light, 1, GL_FALSE, glm::value_ptr(projection));
+		glBindVertexArray(lightVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		float currentTime = glfwGetTime();
 		deltaFrameTime = currentTime - lastFrame;

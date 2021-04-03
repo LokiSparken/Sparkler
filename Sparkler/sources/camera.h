@@ -144,12 +144,14 @@ void Camera::moveBackward(float scale)
 
 void Camera::moveRight(float scale)
 {
+	right_ = glm::cross(front_, up_);
 	position_ += moveSpeed_ * right_ * scale;
 	updateViewMatrix();
 }
 
 void Camera::moveLeft(float scale)
 {
+	right_ = glm::cross(front_, up_);
 	position_ -= moveSpeed_ * right_ * scale;
 	updateViewMatrix();
 }
