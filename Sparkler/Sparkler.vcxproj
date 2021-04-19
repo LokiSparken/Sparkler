@@ -156,6 +156,7 @@
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
+    <ClCompile Include="sources\ui\console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -169,9 +170,11 @@
     <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\const.h" />
     <ClInclude Include="sources\shader.h" />
+    <ClInclude Include="sources\ui\console.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\coordinate.vert" />
+    <None Include="sources\shaders\cube_lighted.frag" />
     <None Include="sources\shaders\light.frag" />
     <None Include="sources\shaders\light.vert">
       <SubType>

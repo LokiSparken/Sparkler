@@ -22,6 +22,9 @@
     <Filter Include="includes">
       <UniqueIdentifier>{eb78eaa4-b036-41c0-a00e-f1aa0df8f44c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\ui">
+      <UniqueIdentifier>{90d77f5b-be73-4ee9-8207-2769b7a22c23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="sources\sparkler.cpp">
       <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\ui\console.cpp">
+      <Filter>sources\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="sources\shader.h">
       <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ui\console.h">
+      <Filter>sources\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +137,9 @@
       <Filter>sources\shaders</Filter>
     </None>
     <None Include="sources\shaders\light_test_cube.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\cube_lighted.frag">
       <Filter>sources\shaders</Filter>
     </None>
   </ItemGroup>

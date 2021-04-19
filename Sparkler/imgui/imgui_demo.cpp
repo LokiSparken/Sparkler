@@ -344,7 +344,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     // Menu Bar
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::BeginMenu("Menu"))
+        if (ImGui::BeginMenu("MenuTest"))
         {
             ShowExampleMenuFile();
             ImGui::EndMenu();

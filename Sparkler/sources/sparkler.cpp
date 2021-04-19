@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <iostream>
 
+#include "../sources/ui/console.h"
 #include "../sources/const.h"
 #include "../sources/shader.h"
 #include "../sources/camera.h"
@@ -26,6 +27,7 @@
 
 static void glfw_error_callback(int error, const char* description);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouseClick_callback(GLFWwindow* window, int button, int action, int mods);
 void moveCursor_callback(GLFWwindow* window, double xpos, double ypos);
 void scrollCursor_callback(GLFWwindow* window, double x, double y);
 void processInput(GLFWwindow* window);
@@ -34,7 +36,8 @@ Camera camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 unsigned char* image;
 float blendValue = 0.6f;
 float lastCursorX = WINDOW_WIDTH / 2.0f, lastCursorY = WINDOW_HEIGHT / 2.0f;
-bool firstEntry = true;
+bool mouseClicked = false;
+//bool firstEntry = true;
 float lastFrame = 0.0f, deltaFrameTime = 0.0f;
 
 int GlfwMode()
@@ -52,6 +55,7 @@ int GlfwMode()
 	glfwSwapInterval(0);
 	
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetMouseButtonCallback(window, mouseClick_callback);
 	glfwSetCursorPosCallback(window, moveCursor_callback);
 	glfwSetScrollCallback(window, scrollCursor_callback);
 
@@ -77,14 +81,12 @@ int GlfwMode()
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	// State
-	bool show_demo_window = false;
-	bool show_logl_window = false;		// Learn OpenGL
-	bool show_cadlab_window = false;	// CAD Lecture Lab
+	bool show_demo_window = true;
+	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	std::string shaderFolder = "sources/shaders/";
-	Shader shader = Shader(shaderFolder + "light_test_cube.vert", shaderFolder + "light_test_cube.frag");
-	Shader lightShader = Shader(shaderFolder + "light.vert", shaderFolder + "light.frag");
+	Shader shader = Shader(SHADER_PATH + "light_test_cube.vert", SHADER_PATH + "light_test_cube.frag");
+	Shader lightShader = Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
 
 	unsigned int VAO, VBO;
 	glGenVertexArrays(1, &VAO);
@@ -111,35 +113,12 @@ int GlfwMode()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		if (show_demo_window)
-			ImGui::ShowDemoWindow(&show_demo_window);
+		//if (show_demo_window)
+		//	ImGui::ShowDemoWindow(&show_demo_window);
+
+		consoleWindow(&show_console_window);
 
 		processInput(window);
-
-		// Create window - Console
-		{
-			ImGui::Begin(ICON_FA_STAR " Console");
-
-			if (ImGui::Button("Clear"))
-				clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-			if (ImGui::Button("LearnOpenGL Playground"))
-				show_logl_window ^= 1;
-
-			ImGui::Text("Average: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-		}
-
-		// Create window - LearnOpenGL
-		if (show_logl_window)
-		{
-			ImGui::Begin(ICON_FA_STAR " LearnOpenGL");
-			if (ImGui::Button("Hello, Triangle. w"))
-			{
-				clear_color = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
-			}
-			ImGui::End();
-		}
 
 		// Rendering
 		ImGui::Render();
@@ -230,22 +209,29 @@ void processInput(GLFWwindow* window)
 		camera.moveRight(scale);
 }
 
+void mouseClick_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (action == GLFW_PRESS)
+			mouseClicked = true;
+		else
+			mouseClicked = false;
+	}
+}
+
 void moveCursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (firstEntry)
-	{
-		firstEntry = false;
-		lastCursorX = xpos, lastCursorY = ypos;
-	}
-
 	float deltaX = xpos - lastCursorX, deltaY = ypos - lastCursorY;
 	lastCursorX = xpos, lastCursorY = ypos;
+
+	if (!mouseClicked) return;
 
 	deltaX *= camera.getRotateSensitivity();
 	deltaY *= camera.getRotateSensitivity();
 
-	camera.addYaw(deltaX);
-	camera.addPitch(deltaY);
+	camera.addYaw(-deltaX);
+	camera.addPitch(-deltaY);
 
 	camera.moveCursor();
 }
