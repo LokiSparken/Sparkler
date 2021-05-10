@@ -5,8 +5,15 @@
 
 static void HelpMarker(const char* desc);
 static void showConsoleMenuBar();
-static void showConsoleInputCollapse();
-static void showConsoleInspectorCollapse();
+
+// about LOGL Playground
+static void showLoglPlaygroundInputCollapse();
+static void showLoglPlaygroundAnalysisCollapse();
+
+// about CAD Lab
+static void showCadLabInputCollapse();
+
+// enter function
 void consoleWindow(bool* p_open);
 
 #endif

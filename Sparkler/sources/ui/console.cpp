@@ -32,17 +32,47 @@ void consoleWindow(bool* p_open)
 	}
 
 	ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-	
-	showConsoleMenuBar();
 
-	showConsoleInputCollapse();
+	showConsoleMenuBar();
+	
+	static bool logl = false;
+	static bool cad = false;
+
+	ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Choose Playground ");
+	if (ImGui::RadioButton("LOGL", logl)) logl = true;
+	if (logl && cad) cad = false;
+	ImGui::SameLine(); 
+	if (ImGui::RadioButton("CAD", cad)) cad = true;
+	if (cad && logl) logl = false;
+
 	ImGui::Spacing();
-	showConsoleInspectorCollapse();
+
+
+	if (logl)
+	{
+		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "LOGL Playground Inspector");
+		showLoglPlaygroundInputCollapse();
+		ImGui::Spacing();
+		showLoglPlaygroundAnalysisCollapse();
+	}
+	
+	if (cad)
+	{
+		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "CAD Lab Inspector");
+		showCadLabInputCollapse();
+	}
+	
+
+	ImGui::Spacing();
+	if (ImGui::Button("Render"))
+	{
+
+	}
 
 	ImGui::End();
 }
 
-static void showConsoleInputCollapse()
+static void showLoglPlaygroundInputCollapse()
 {
 	if (ImGui::CollapsingHeader("Input Settings"))
 	{
@@ -53,8 +83,19 @@ static void showConsoleInputCollapse()
 		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Light");
 		{
 			{
-				static float ambient[3] = { 0.39f, 0.58f, 0.93f };
-				ImGui::ColorEdit3("Ambient", ambient);
+				static float objectColor[3] = { 0.39f, 0.58f, 0.93f };
+				ImGui::ColorEdit3("ObjectColor", objectColor);
+				ImGui::SameLine(); HelpMarker(
+					"TODO: Change color for nothing now.\n"
+					"Click on the color square to open a color picker.\n"
+					"Click and hold to use drag and drop.\n"
+					"Right-click on the color square to show options.\n"
+					"CTRL+click on individual component to input value.\n");
+			}
+
+			{
+				static float lightColor[3] = { 1.0f, 1.0f, 1.0f };
+				ImGui::ColorEdit3("LightColor", lightColor);
 				ImGui::SameLine(); HelpMarker(
 					"TODO: Change color for nothing now.\n"
 					"Click on the color square to open a color picker.\n"
@@ -66,12 +107,32 @@ static void showConsoleInputCollapse()
 	}
 }
 
-static void showConsoleInspectorCollapse()
+static void showLoglPlaygroundAnalysisCollapse()
 {
-	if (ImGui::CollapsingHeader("Inspector"))
+	if (ImGui::CollapsingHeader("Analysis"))
 	{
 		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Average Speed");
 		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	}
+}
+
+static void showCadLabInputCollapse()
+{
+	if (ImGui::CollapsingHeader("Input Settings"))
+	{
+		ImGui::LabelText("Description", "Input");
+
+		{
+			const char* items[] = { "Cube", "Sphere" };
+			static int item_current = 0;
+			ImGui::Combo("Object", &item_current, items, IM_ARRAYSIZE(items));
+			ImGui::SameLine(); 
+			HelpMarker("Select the object to render.");
+		}
+
+		{
+
+		}
 	}
 }
 

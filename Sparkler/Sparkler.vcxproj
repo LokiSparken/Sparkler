@@ -157,6 +157,7 @@
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
+    <ClCompile Include="sources\ui\cad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -170,28 +171,20 @@
     <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\const.h" />
     <ClInclude Include="sources\shader.h" />
+    <ClInclude Include="sources\ui\cad.h" />
     <ClInclude Include="sources\ui\console.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sources\shaders\coordinate.vert" />
+    <None Include="sources\shaders\cube_add_material.frag" />
     <None Include="sources\shaders\cube_lighted.frag" />
+    <None Include="sources\shaders\cube_lighted.vert" />
     <None Include="sources\shaders\light.frag" />
     <None Include="sources\shaders\light.vert">
       <SubType>
       </SubType>
     </None>
-    <None Include="sources\shaders\light_test_cube.frag" />
-    <None Include="sources\shaders\light_test_cube.vert">
-      <SubType>
-      </SubType>
-    </None>
-    <None Include="sources\shaders\simple_fragment_blue.frag" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
-    <None Include="sources\shaders\simple_fragment_shader.frag" />
-    <None Include="sources\shaders\simple_vertex_shader.vert" />
-    <None Include="sources\shaders\texture.frag" />
-    <None Include="sources\shaders\texture.vert" />
     <None Include="sources\shaders\texture_mix.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

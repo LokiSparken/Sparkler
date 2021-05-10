@@ -8,6 +8,10 @@
 #include <iostream>
 #include <string.h>
 
+#include "../includes/glm/glm.hpp"
+#include "../includes/glm/gtc/matrix_transform.hpp"
+#include "../includes/glm/gtc/type_ptr.hpp"
+
 class Shader
 {
 public:
@@ -18,6 +22,8 @@ public:
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
+	void setVec3(const std::string& name, glm::vec3 value) const;
+	void setMat4(const std::string& name, glm::mat4 value) const;
 };
 
 Shader::Shader(std::string vertexShaderFilePath = DEFAULT_VERTEX_SHADER_PATH, std::string fragmentShaderFilePath = DEFAULT_FRAGMENT_SHADER_PATH)
@@ -110,6 +116,16 @@ inline void Shader::setInt(const std::string& name, int value) const
 inline void Shader::setFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+inline void Shader::setVec3(const std::string& name, glm::vec3 value) const
+{
+	glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
+}
+
+inline void Shader::setMat4(const std::string& name, glm::mat4 value) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 #endif // SHADER_H

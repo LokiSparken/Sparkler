@@ -85,7 +85,7 @@ int GlfwMode()
 	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	Shader shader = Shader(SHADER_PATH + "light_test_cube.vert", SHADER_PATH + "light_test_cube.frag");
+	Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_lighted.frag");
 	Shader lightShader = Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
 
 	unsigned int VAO, VBO;
@@ -93,18 +93,22 @@ int GlfwMode()
 	glBindVertexArray(VAO);
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_with_normal), vertices_with_normal, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	unsigned int lightVAO;
 	glGenVertexArrays(2, &lightVAO);
 	glBindVertexArray(lightVAO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
+
+	// set attributes
+	glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -128,38 +132,32 @@ int GlfwMode()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw cube
-		shader.use();
-		unsigned int modelLocation_cube = glGetUniformLocation(shader.ID, "model");
-		unsigned int viewLocation_cube = glGetUniformLocation(shader.ID, "view");
-		unsigned int projectionLocation_cube = glGetUniformLocation(shader.ID, "projection");
-
-		glm::mat4 model_cube = glm::mat4(1.0f);
-		glUniformMatrix4fv(modelLocation_cube, 1, GL_FALSE, glm::value_ptr(model_cube));
-
 		camera.setViewMatrix();
-		glm::mat4 view = camera.getViewMatrix();
-		glUniformMatrix4fv(viewLocation_cube, 1, GL_FALSE, glm::value_ptr(view));
 
+		// model pass: draw cube
+		shader.use();
+		shader.setVec3("objectColor", glm::vec3(65.0 / 255.0, 105.0 / 255.0, 225.0 / 255.0));
+		shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		shader.setVec3("lightPosition", lightPosition);
+		shader.setVec3("viewPosition", camera.getPosition());
+		glm::mat4 model_cube = glm::mat4(1.0f);
+		glm::mat4 view = camera.getViewMatrix();
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(camera.getFov()), 4.0f/3.0f, 0.1f, 100.0f);
-		glUniformMatrix4fv(projectionLocation_cube, 1, GL_FALSE, glm::value_ptr(projection));
-		
+		shader.setMat4("model", model_cube);
+		shader.setMat4("view", view);
+		shader.setMat4("projection", projection);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// draw light cube
+		// model pass: draw light cube
 		lightShader.use();
-		unsigned int modelLocation_light = glGetUniformLocation(lightShader.ID, "model");
-		unsigned int viewLocation_light = glGetUniformLocation(lightShader.ID, "view");
-		unsigned int projectionLocation_light = glGetUniformLocation(lightShader.ID, "projection");
-		glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
 		glm::mat4 model_light = glm::mat4(1.0f);
 		model_light = glm::translate(model_light, lightPosition);
 		model_light = glm::scale(model_light, glm::vec3(0.1f));
-		glUniformMatrix4fv(modelLocation_light, 1, GL_FALSE, glm::value_ptr(model_light));
-		glUniformMatrix4fv(viewLocation_light, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projectionLocation_light, 1, GL_FALSE, glm::value_ptr(projection));
+		lightShader.setMat4("model", model_light);
+		lightShader.setMat4("view", view);
+		lightShader.setMat4("projection", projection);
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 

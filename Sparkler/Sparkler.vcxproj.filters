@@ -60,6 +60,9 @@
     <ClCompile Include="sources\ui\console.cpp">
       <Filter>sources\ui</Filter>
     </ClCompile>
+    <ClCompile Include="sources\ui\cad.cpp">
+      <Filter>sources\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -98,6 +101,9 @@
     <ClInclude Include="sources\ui\console.h">
       <Filter>sources\ui</Filter>
     </ClInclude>
+    <ClInclude Include="sources\ui\cad.h">
+      <Filter>sources\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\default_fragment_shader.frag">
@@ -106,25 +112,7 @@
     <None Include="sources\shaders\default_vertex_shader.vert">
       <Filter>sources\shaders</Filter>
     </None>
-    <None Include="sources\shaders\simple_fragment_shader.frag">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\simple_vertex_shader.vert">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\simple_fragment_blue.frag">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\texture.frag">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\texture.vert">
-      <Filter>sources\shaders</Filter>
-    </None>
     <None Include="sources\shaders\texture_mix.frag">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\coordinate.vert">
       <Filter>sources\shaders</Filter>
     </None>
     <None Include="sources\shaders\light.vert">
@@ -133,13 +121,13 @@
     <None Include="sources\shaders\light.frag">
       <Filter>sources\shaders</Filter>
     </None>
-    <None Include="sources\shaders\light_test_cube.vert">
-      <Filter>sources\shaders</Filter>
-    </None>
-    <None Include="sources\shaders\light_test_cube.frag">
-      <Filter>sources\shaders</Filter>
-    </None>
     <None Include="sources\shaders\cube_lighted.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\cube_lighted.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\cube_add_material.frag">
       <Filter>sources\shaders</Filter>
     </None>
   </ItemGroup>

@@ -3,6 +3,16 @@
 in vec3 normal;
 in vec3 fragPosition;
 
+struct Material
+{
+	vec3 ambientColor;
+	vec3 diffuseColor;
+	vec3 specularColor;
+	float shininess;
+};
+
+uniform Material material;
+
 uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform vec3 lightPosition;
@@ -25,8 +35,6 @@ void main()
 	float specularCoeff = pow(max(dot(viewDirection, reflectDirection), 0.0), shininess);
 	vec3 specular = specularIntensity * specularCoeff * lightColor;
 
-//	vec3 irradiance = (ambient) * objectColor;
-//	vec3 irradiance = (ambient + diffuse) * objectColor;
 	vec3 irradiance = (ambient + diffuse + specular) * objectColor;
 	gl_FragColor = vec4(irradiance, 1.0f);
 }
