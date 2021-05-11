@@ -170,6 +170,7 @@
     <ClInclude Include="sources\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\const.h" />
+    <ClInclude Include="sources\global.h" />
     <ClInclude Include="sources\shader.h" />
     <ClInclude Include="sources\ui\cad.h" />
     <ClInclude Include="sources\ui\console.h" />
@@ -178,6 +179,8 @@
     <None Include="sources\shaders\cube_add_material.frag" />
     <None Include="sources\shaders\cube_lighted.frag" />
     <None Include="sources\shaders\cube_lighted.vert" />
+    <None Include="sources\shaders\gouraund.frag" />
+    <None Include="sources\shaders\gouraund.vert" />
     <None Include="sources\shaders\light.frag" />
     <None Include="sources\shaders\light.vert">
       <SubType>

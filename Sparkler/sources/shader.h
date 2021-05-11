@@ -23,6 +23,7 @@ public:
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
 	void setVec3(const std::string& name, glm::vec3 value) const;
+	void setVec3(const std::string& name, float r, float g, float b) const;
 	void setMat4(const std::string& name, glm::mat4 value) const;
 };
 
@@ -121,6 +122,11 @@ inline void Shader::setFloat(const std::string& name, float value) const
 inline void Shader::setVec3(const std::string& name, glm::vec3 value) const
 {
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
+}
+
+inline void Shader::setVec3(const std::string& name, float r, float g, float b) const
+{
+	glUniform3f(glGetUniformLocation(ID, name.c_str()), r, g, b);
 }
 
 inline void Shader::setMat4(const std::string& name, glm::mat4 value) const

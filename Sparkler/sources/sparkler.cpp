@@ -85,7 +85,9 @@ int GlfwMode()
 	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_lighted.frag");
+	//Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_lighted.frag");
+	//Shader shader = Shader(SHADER_PATH + "gouraund.vert", SHADER_PATH + "gouraund.frag");
+	Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_add_material.frag");
 	Shader lightShader = Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
 
 	unsigned int VAO, VBO;
@@ -117,8 +119,8 @@ int GlfwMode()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		//if (show_demo_window)
-		//	ImGui::ShowDemoWindow(&show_demo_window);
+		if (show_demo_window)
+			ImGui::ShowDemoWindow(&show_demo_window);
 
 		consoleWindow(&show_console_window);
 
@@ -136,10 +138,18 @@ int GlfwMode()
 
 		// model pass: draw cube
 		shader.use();
-		shader.setVec3("objectColor", glm::vec3(65.0 / 255.0, 105.0 / 255.0, 225.0 / 255.0));
+		glm::vec3 blue = glm::vec3(65.0 / 255.0, 105.0 / 255.0, 225.0 / 255.0);
+		shader.setVec3("objectColor", blue);
 		shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 		shader.setVec3("lightPosition", lightPosition);
 		shader.setVec3("viewPosition", camera.getPosition());
+		shader.setVec3("material.ambientColor", blue);
+		shader.setVec3("material.diffuseColor", blue);
+		shader.setVec3("material.specularColor", blue);
+		shader.setFloat("material.shininess", 32.0f);
+		shader.setVec3("light.ambient", 0.33f, 0.33f, 0.33f);
+		shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		glm::mat4 model_cube = glm::mat4(1.0f);
 		glm::mat4 view = camera.getViewMatrix();
 		glm::mat4 projection = glm::mat4(1.0f);
