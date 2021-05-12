@@ -9,8 +9,6 @@ GUI | ImGui 1.81
 Back-end | GLFW & OpenGL 3
 Maths | GLM 0.9.9.8
 
-## 
-
 ## 命名规范
 ### **1. 代码**
 * 变量相关
@@ -70,7 +68,11 @@ Maths | GLM 0.9.9.8
     #endif // CLASSNAME_H
     ```
 
+## 单例模式
+* [Stack Overflow - C++ Singleton design pattern](https://stackoverflow.com/questions/1008019/c-singleton-design-pattern)
+
 # TODO Flag
+* UI input usage
 * Compare Areas
 
 <!-- TODO: 5. statements 之后 -->

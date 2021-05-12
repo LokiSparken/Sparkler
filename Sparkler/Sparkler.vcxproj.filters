@@ -107,6 +107,9 @@
     <ClInclude Include="sources\global.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="sources\texture.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\default_fragment_shader.frag">
@@ -137,6 +140,12 @@
       <Filter>sources\shaders</Filter>
     </None>
     <None Include="sources\shaders\gouraund.frag">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\cube_add_maps.vert">
+      <Filter>sources\shaders</Filter>
+    </None>
+    <None Include="sources\shaders\cube_add_maps.frag">
       <Filter>sources\shaders</Filter>
     </None>
   </ItemGroup>

@@ -6,20 +6,22 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <stdio.h>
+#include "../includes/glm/glm.hpp"
+#include "../includes/glm/gtc/matrix_transform.hpp"
+#include "../includes/glm/gtc/type_ptr.hpp"
+
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "../includes/stb_image.h"
+
+#include <cstdio>
+#include <string>
 #include <iostream>
 
 #include "../sources/ui/console.h"
 #include "../sources/const.h"
 #include "../sources/shader.h"
 #include "../sources/camera.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "../includes/stb_image.h"
-
-#include "../includes/glm/glm.hpp"
-#include "../includes/glm/gtc/matrix_transform.hpp"
-#include "../includes/glm/gtc/type_ptr.hpp"
+#include "../sources/texture.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -37,7 +39,6 @@ unsigned char* image;
 float blendValue = 0.6f;
 float lastCursorX = WINDOW_WIDTH / 2.0f, lastCursorY = WINDOW_HEIGHT / 2.0f;
 bool mouseClicked = false;
-//bool firstEntry = true;
 float lastFrame = 0.0f, deltaFrameTime = 0.0f;
 
 int GlfwMode()
@@ -85,32 +86,39 @@ int GlfwMode()
 	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	//Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_lighted.frag");
-	//Shader shader = Shader(SHADER_PATH + "gouraund.vert", SHADER_PATH + "gouraund.frag");
-	Shader shader = Shader(SHADER_PATH + "cube_lighted.vert", SHADER_PATH + "cube_add_material.frag");
+	Shader shader = Shader(SHADER_PATH + "cube_add_maps.vert", SHADER_PATH + "cube_add_maps.frag");
 	Shader lightShader = Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
 
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	unsigned int cubeVAO, VBO;
+	glGenVertexArrays(1, &cubeVAO);
+	glBindVertexArray(cubeVAO);
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_with_normal), vertices_with_normal, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_normal_texcoord), vertices_normal_texcoord, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	unsigned int lightVAO;
 	glGenVertexArrays(2, &lightVAO);
 	glBindVertexArray(lightVAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
 
 	// set attributes
 	glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
+	std::string diffuseMapPath("resources/textures/container2.png");
+	std::string specularMapPath("resources/textures/container2_specular.png");
+	//std::string specularMapPath("resources/textures/container2_specular_colored.png");
+	std::string emissionMapPath("resources/textures/matrix.jpg");
+	unsigned int diffuseMap = loadTexture(diffuseMapPath.c_str());
+	unsigned int specularMap = loadTexture(specularMapPath.c_str());
+	unsigned int emissionMap = loadTexture(emissionMapPath.c_str());
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -119,8 +127,8 @@ int GlfwMode()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		if (show_demo_window)
-			ImGui::ShowDemoWindow(&show_demo_window);
+		//if (show_demo_window)
+		//	ImGui::ShowDemoWindow(&show_demo_window);
 
 		consoleWindow(&show_console_window);
 
@@ -139,14 +147,12 @@ int GlfwMode()
 		// model pass: draw cube
 		shader.use();
 		glm::vec3 blue = glm::vec3(65.0 / 255.0, 105.0 / 255.0, 225.0 / 255.0);
-		shader.setVec3("objectColor", blue);
-		shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-		shader.setVec3("lightPosition", lightPosition);
 		shader.setVec3("viewPosition", camera.getPosition());
-		shader.setVec3("material.ambientColor", blue);
-		shader.setVec3("material.diffuseColor", blue);
-		shader.setVec3("material.specularColor", blue);
+		shader.setInt("material.diffuseColor", 0);
+		shader.setInt("material.specularColor", 1);
+		shader.setInt("material.emissionColor", 2);
 		shader.setFloat("material.shininess", 32.0f);
+		shader.setVec3("light.position", lightPosition);
 		shader.setVec3("light.ambient", 0.33f, 0.33f, 0.33f);
 		shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
@@ -157,7 +163,13 @@ int GlfwMode()
 		shader.setMat4("model", model_cube);
 		shader.setMat4("view", view);
 		shader.setMat4("projection", projection);
-		glBindVertexArray(VAO);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, emissionMap);
+		glBindVertexArray(cubeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// model pass: draw light cube
@@ -179,7 +191,7 @@ int GlfwMode()
 		glfwSwapBuffers(window);
 	}
 
-	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &cubeVAO);
 	glDeleteBuffers(1, &VBO);
 
 	// Cleanup
@@ -248,4 +260,3 @@ void scrollCursor_callback(GLFWwindow* window, double x, double y)
 {
 	camera.scrollCursor((float)y);
 }
-
