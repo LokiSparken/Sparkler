@@ -155,6 +155,8 @@
     <ClCompile Include="libs\glad\glad.c" />
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp" />
+    <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
     <ClCompile Include="sources\ui\cad.cpp" />
@@ -172,26 +174,31 @@
     <ClInclude Include="sources\const.h" />
     <ClInclude Include="sources\global.h" />
     <ClInclude Include="sources\shader.h" />
+    <ClInclude Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_spot.frag" />
     <ClInclude Include="sources\texture.h" />
     <ClInclude Include="sources\ui\cad.h" />
     <ClInclude Include="sources\ui\console.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sources\shaders\cube_add_maps.frag" />
-    <None Include="sources\shaders\cube_add_maps.vert" />
-    <None Include="sources\shaders\cube_add_material.frag" />
-    <None Include="sources\shaders\cube_lighted.frag" />
-    <None Include="sources\shaders\cube_lighted.vert" />
-    <None Include="sources\shaders\gouraund.frag" />
-    <None Include="sources\shaders\gouraund.vert" />
-    <None Include="sources\shaders\light.frag" />
-    <None Include="sources\shaders\light.vert">
+    <None Include="sources\shaders\1. getting_started\texture_mix.frag" />
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.frag" />
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.vert" />
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\gouraund.frag" />
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\gouraund.vert" />
+    <None Include="sources\shaders\2. lighting\2.3 materials\cube_add_material.frag" />
+    <None Include="sources\shaders\2. lighting\2.3 materials\cube_lighted.vert" />
+    <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.frag" />
+    <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.vert" />
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_directional.frag" />
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.vert">
       <SubType>
       </SubType>
     </None>
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_point.frag" />
+    <None Include="sources\shaders\2. lighting\light.frag" />
+    <None Include="sources\shaders\2. lighting\light.vert" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
-    <None Include="sources\shaders\texture_mix.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

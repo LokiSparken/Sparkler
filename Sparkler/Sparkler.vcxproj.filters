@@ -25,6 +25,24 @@
     <Filter Include="sources\ui">
       <UniqueIdentifier>{90d77f5b-be73-4ee9-8207-2769b7a22c23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\shaders\1. getting_started">
+      <UniqueIdentifier>{5d2b8090-eaac-4539-a67c-0b631fd167b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\2. lighting">
+      <UniqueIdentifier>{dcdaf07e-5703-4c69-9681-ff543ee07237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\2. lighting\2.2 basic_light">
+      <UniqueIdentifier>{a14e8f7e-83c1-4194-b29c-cd7650d45f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\2. lighting\2.3 materials">
+      <UniqueIdentifier>{9ece8336-309b-44df-ac1c-60de0c1bdb22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\2. lighting\2.4 lighting_maps">
+      <UniqueIdentifier>{8996dbc2-4a83-4606-b19e-ee2bce229c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\2. lighting\2.5 casters">
+      <UniqueIdentifier>{5f0cca01-8e10-44c7-8b64-b3d778a2a446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -62,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="sources\ui\cad.cpp">
       <Filter>sources\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup.cpp">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp">
+      <Filter>sources\shaders\2. lighting\2.4 lighting_maps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +134,9 @@
     <ClInclude Include="sources\texture.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_spot.frag">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\default_fragment_shader.frag">
@@ -118,35 +145,47 @@
     <None Include="sources\shaders\default_vertex_shader.vert">
       <Filter>sources\shaders</Filter>
     </None>
-    <None Include="sources\shaders\texture_mix.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\1. getting_started\texture_mix.frag">
+      <Filter>sources\shaders\1. getting_started</Filter>
     </None>
-    <None Include="sources\shaders\light.vert">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\light.frag">
+      <Filter>sources\shaders\2. lighting</Filter>
     </None>
-    <None Include="sources\shaders\light.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\light.vert">
+      <Filter>sources\shaders\2. lighting</Filter>
     </None>
-    <None Include="sources\shaders\cube_lighted.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.frag">
+      <Filter>sources\shaders\2. lighting\2.2 basic_light</Filter>
     </None>
-    <None Include="sources\shaders\cube_lighted.vert">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.vert">
+      <Filter>sources\shaders\2. lighting\2.2 basic_light</Filter>
     </None>
-    <None Include="sources\shaders\cube_add_material.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\gouraund.frag">
+      <Filter>sources\shaders\2. lighting\2.2 basic_light</Filter>
     </None>
-    <None Include="sources\shaders\gouraund.vert">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.2 basic_light\gouraund.vert">
+      <Filter>sources\shaders\2. lighting\2.2 basic_light</Filter>
     </None>
-    <None Include="sources\shaders\gouraund.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.3 materials\cube_add_material.frag">
+      <Filter>sources\shaders\2. lighting\2.3 materials</Filter>
     </None>
-    <None Include="sources\shaders\cube_add_maps.vert">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.3 materials\cube_lighted.vert">
+      <Filter>sources\shaders\2. lighting\2.3 materials</Filter>
     </None>
-    <None Include="sources\shaders\cube_add_maps.frag">
-      <Filter>sources\shaders</Filter>
+    <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.frag">
+      <Filter>sources\shaders\2. lighting\2.4 lighting_maps</Filter>
+    </None>
+    <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.vert">
+      <Filter>sources\shaders\2. lighting\2.4 lighting_maps</Filter>
+    </None>
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_directional.frag">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </None>
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_point.frag">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </None>
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.vert">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
     </None>
   </ItemGroup>
 </Project>

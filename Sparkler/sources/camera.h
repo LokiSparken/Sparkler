@@ -27,6 +27,7 @@ public:
 	float getFov();
 	float getRotateSensitivity();
 	glm::vec3 getPosition();
+	glm::vec3 getFront();
 	glm::mat4 getViewMatrix();
 	
 	void setFov(float fov);
@@ -105,6 +106,11 @@ float Camera::getRotateSensitivity()
 glm::vec3 Camera::getPosition()
 {
 	return position_;
+}
+
+glm::vec3 Camera::getFront()
+{
+	return front_;
 }
 
 glm::mat4 Camera::getViewMatrix()
