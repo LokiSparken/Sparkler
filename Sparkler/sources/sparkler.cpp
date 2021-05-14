@@ -20,6 +20,48 @@
 #include "../sources/camera.h"
 #include "../sources/texture.h"
 
+
+/*============= ASSIMP TEST =============*/
+#include <../includes/assimp/Importer.hpp>      // C++ importer interface
+#include <../includes/assimp/scene.h>           // Output data structure
+#include <../includes/assimp/postprocess.h>     // Post processing flags
+
+#pragma comment (lib, "assimp-vc142-mtd.lib")
+
+void LoadFinish(const aiScene* scene)
+{
+	std::cout << "LoadFinish ! NumVertices : " << (*(scene->mMeshes))->mNumVertices << std::endl;
+}
+
+bool LoadModel(const std::string& pFile)
+{
+	// Create an instance of the Importer class
+	Assimp::Importer importer;
+
+	// And have it read the given file with some example postprocessing
+	// Usually - if speed is not the most important aspect for you - you'll
+	// probably to request more postprocessing than we do in this example.
+	const aiScene* scene = importer.ReadFile(pFile,
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_SortByPType);
+
+	// If the import failed, report it
+	if (!scene)
+	{
+		std::cout << importer.GetErrorString() << std::endl;
+		return false;
+	}
+
+	// Now we can access the file's contents.
+	LoadFinish(scene);
+
+	// We're done. Everything will be cleaned up by the importer destructor
+	return true;
+}
+/*============= ASSIMP TEST =============*/
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
@@ -244,6 +286,9 @@ int GlfwMode()
 
 int main(int, char**)
 {
+	// ASSIMP build test
+	LoadModel("resources/objects/nanosuit/nanosuit.obj");
+	
 	GlfwMode();
 
 	return 0;
