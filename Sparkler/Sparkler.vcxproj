@@ -157,6 +157,7 @@
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp" />
     <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup.cpp" />
+    <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup2.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
     <ClCompile Include="sources\ui\cad.cpp" />
@@ -189,6 +190,7 @@
     <None Include="sources\shaders\2. lighting\2.3 materials\cube_lighted.vert" />
     <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.frag" />
     <None Include="sources\shaders\2. lighting\2.4 lighting_maps\cube_add_maps.vert" />
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.frag" />
     <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_directional.frag" />
     <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.vert">
       <SubType>

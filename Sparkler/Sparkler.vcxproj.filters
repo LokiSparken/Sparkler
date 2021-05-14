@@ -87,6 +87,9 @@
     <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp">
       <Filter>sources\shaders\2. lighting\2.4 lighting_maps</Filter>
     </ClCompile>
+    <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup2.cpp">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -185,6 +188,9 @@
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
     </None>
     <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.vert">
+      <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </None>
+    <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.frag">
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
     </None>
   </ItemGroup>

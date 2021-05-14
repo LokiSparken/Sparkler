@@ -85,7 +85,9 @@ int GlfwMode()
 
 	//Shader shader = Shader(SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.vert", SHADER_PATH + "2. lighting/2.5 casters/cube_lighted_directional.frag");
 	//Shader shader = Shader(SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.vert", SHADER_PATH + "2. lighting/2.5 casters/cube_lighted_point.frag");
-	Shader shader = Shader(SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.vert", SHADER_PATH + "2. lighting/2.5 casters/cube_lighted_spot.frag");
+	//Shader shader = Shader(SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.vert", SHADER_PATH + "2. lighting/2.5 casters/cube_lighted_spot.frag");
+	Shader shader = Shader(SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.vert", SHADER_PATH + "2. lighting/2.5 casters/cube_lighted.frag");
+	Shader lightCubeShader = Shader(SHADER_PATH + "2. lighting/light.vert", SHADER_PATH + "2. lighting/light.frag");
 
 	unsigned int cubeVAO, VBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -99,6 +101,12 @@ int GlfwMode()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+
+	unsigned int lightCubeVAO;
+	glGenVertexArrays(2, &lightCubeVAO);
+	glBindVertexArray(lightCubeVAO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -133,28 +141,36 @@ int GlfwMode()
 
 		camera.setViewMatrix();
 
-		// model pass: draw cube
+		// 1. draw cubes
 		shader.use();
 		shader.setVec3("viewPosition", camera.getPosition());
 		shader.setInt("material.diffuseColor", 0);
 		shader.setInt("material.specularColor", 1);
 		shader.setFloat("material.shininess", 32.0f);
 		// directional light
-		//shader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		shader.setVec3("directionalLight.direction", -0.2f, -1.0f, -0.3f);
+		shader.setVec3("directionalLight.ambient", 0.33f, 0.33f, 0.33f);
+		shader.setVec3("directionalLight.diffuse", 0.5f, 0.5f, 0.5f);
+		shader.setVec3("directionalLight.specular", 1.0f, 1.0f, 1.0f);
 		// point light
-		shader.setVec3("light.position", -0.2f, -1.0f, -0.3f);
-		shader.setVec3("light.ambient", 0.33f, 0.33f, 0.33f);
-		shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		// point light attenuation attributes
-		//shader.setFloat("light.constant", 1.0f);
-		//shader.setFloat("light.linear", 0.09f);
-		//shader.setFloat("light.quadratic", 0.032f);
+		//shader.setVec3("pointLight.position", lightPosition);
+		//shader.setVec3("pointLight.ambient", 0.33f, 0.33f, 0.33f);
+		//shader.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
+		//shader.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
+		//shader.setFloat("pointLight.constant", 1.0f);
+		//shader.setFloat("pointLight.linear", 0.09f);
+		//shader.setFloat("pointLight.quadratic", 0.032f);
 		// spot light
-		shader.setVec3("light.position", camera.getPosition());
-		shader.setVec3("light.direction", camera.getFront());
-		shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f)));
-		shader.setFloat("light.outerCutoff", glm::cos(glm::radians(17.5f)));
+		shader.setVec3("spotLight.ambient", 0.33f, 0.33f, 0.33f);
+		shader.setVec3("spotLight.diffuse", 0.5f, 0.5f, 0.5f);
+		shader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+		shader.setVec3("spotLight.position", camera.getPosition());
+		shader.setVec3("spotLight.direction", camera.getFront());
+		shader.setFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
+		shader.setFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
+		shader.setFloat("spotLight.constant", 1.0f);
+		shader.setFloat("spotLight.linear", 0.09f);
+		shader.setFloat("spotLight.quadratic", 0.032f);
 
 		glm::mat4 view = camera.getViewMatrix();
 		glm::mat4 projection = glm::mat4(1.0f);
@@ -175,6 +191,33 @@ int GlfwMode()
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			shader.setMat4("model", model);
 
+			for (unsigned int j = 0; j < NR_POINT_LIGHTS; ++j)
+			{
+				std::string name = "pointLights[" + std::to_string(j) + std::string("].");
+				//std::cout << name << std::endl;
+				shader.setVec3(name + "position", pointLightPositions[j]);
+				shader.setVec3(name + "ambient", 0.13f, 0.13f, 0.13f);
+				shader.setVec3(name + "diffuse", 0.3f, 0.3f, 0.3f);
+				shader.setVec3(name + "specular", 0.8f, 0.8f, 0.8f);
+				shader.setFloat(name + "constant", 1.0f);
+				shader.setFloat(name + "linear", 0.09f);
+				shader.setFloat(name + "quadratic", 0.032f);
+
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
+		}
+
+		// draw point lights' position
+		lightCubeShader.use();
+		glBindVertexArray(lightCubeVAO);
+		for (unsigned int i = 0; i < NR_POINT_LIGHTS; ++i)
+		{
+			glm::mat4 model(1.0f);
+			model = glm::translate(model, pointLightPositions[i]);
+			model = glm::scale(model, glm::vec3(0.1f));
+			lightCubeShader.setMat4("model", model);
+			lightCubeShader.setMat4("view", view);
+			lightCubeShader.setMat4("projection", projection);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
