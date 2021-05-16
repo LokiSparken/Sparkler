@@ -43,6 +43,9 @@
     <Filter Include="sources\shaders\2. lighting\2.5 casters">
       <UniqueIdentifier>{5f0cca01-8e10-44c7-8b64-b3d778a2a446}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\shaders\3. model">
+      <UniqueIdentifier>{a9368f12-a68c-4cfc-83ec-449138668836}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -140,6 +143,9 @@
     <ClInclude Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_spot.frag">
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
     </ClInclude>
+    <ClInclude Include="sources\model.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sources\shaders\default_fragment_shader.frag">
@@ -192,6 +198,24 @@
     </None>
     <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted.frag">
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\multi_light.frag">
+      <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\multi_light.vert">
+      <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\light.vert">
+      <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\light.frag">
+      <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\load_test.vert">
+      <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\3. model\load_test.frag">
+      <Filter>sources\shaders\3. model</Filter>
     </None>
   </ItemGroup>
 </Project>

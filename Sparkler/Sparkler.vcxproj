@@ -174,6 +174,7 @@
     <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\const.h" />
     <ClInclude Include="sources\global.h" />
+    <ClInclude Include="sources\model.h" />
     <ClInclude Include="sources\shader.h" />
     <ClInclude Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_spot.frag" />
     <ClInclude Include="sources\texture.h" />
@@ -199,6 +200,12 @@
     <None Include="sources\shaders\2. lighting\2.5 casters\cube_lighted_point.frag" />
     <None Include="sources\shaders\2. lighting\light.frag" />
     <None Include="sources\shaders\2. lighting\light.vert" />
+    <None Include="sources\shaders\3. model\light.frag" />
+    <None Include="sources\shaders\3. model\light.vert" />
+    <None Include="sources\shaders\3. model\load_test.frag" />
+    <None Include="sources\shaders\3. model\load_test.vert" />
+    <None Include="sources\shaders\3. model\multi_light.frag" />
+    <None Include="sources\shaders\3. model\multi_light.vert" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
   </ItemGroup>

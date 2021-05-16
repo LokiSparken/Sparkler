@@ -4,14 +4,16 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../includes/stb_image.h"
 
+
+unsigned int loadTexture(const char* path);
+unsigned int loadTextureFromFile(const char* path, const std::string& directory);
+
 /**
  * @brief	Load texture from file path. Create and generate the texture. Generate the mipmap. Set the texture wrapping mode. Return the texture ID.
  * @param	path: texture path
  * 
  * @return	The texture ID
  */
-unsigned int loadTexture(const char* path);
-
 unsigned int loadTexture(char const* path)
 {
 	unsigned int textureID;
@@ -49,4 +51,14 @@ unsigned int loadTexture(char const* path)
 	return textureID;
 }
 
+/**
+ * @brief	Merge filepath with filename to the complete path. Call the texture load function.
+ */
+unsigned int loadTexture(const char* path, const std::string& directory)
+{
+	std::string filename = std::string(path);
+	filename = directory + '/' + filename;
+
+	return loadTexture(filename.c_str());
+}
 #endif
