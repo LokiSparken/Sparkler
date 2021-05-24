@@ -5,7 +5,7 @@
 #include "../includes/stb_image.h"
 
 
-unsigned int loadTexture(const char* path);
+unsigned int loadTexture(const char* path, bool flip);
 unsigned int loadTextureFromFile(const char* path, const std::string& directory);
 
 /**
@@ -14,11 +14,12 @@ unsigned int loadTextureFromFile(const char* path, const std::string& directory)
  * 
  * @return	The texture ID
  */
-unsigned int loadTexture(char const* path)
+unsigned int loadTexture(char const* path, bool flip = true)
 {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
+	stbi_set_flip_vertically_on_load(true);
 	int width, height, nrComponents;
 	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
 	if (data)

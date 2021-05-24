@@ -46,6 +46,15 @@
     <Filter Include="sources\shaders\3. model">
       <UniqueIdentifier>{a9368f12-a68c-4cfc-83ec-449138668836}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl">
+      <UniqueIdentifier>{809c5162-aa5e-42f9-b6f3-ac7d9fe4c04d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.1 depth_testing">
+      <UniqueIdentifier>{e8862a30-30c2-4e4b-971d-54d21a0312bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing">
+      <UniqueIdentifier>{3b2508bf-c38b-469d-8244-657fb95a43eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -92,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup2.cpp">
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\advanced.cpp">
+      <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +228,24 @@
     </None>
     <None Include="sources\shaders\3. model\load_test.frag">
       <Filter>sources\shaders\3. model</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.1 depth_testing\depth_visual.vert">
+      <Filter>sources\shaders\4. advanced_opengl\4.1 depth_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.1 depth_testing\depth_visual.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.1 depth_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.vert">
+      <Filter>sources\shaders\4. advanced_opengl\4.2 stencil_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.2 stencil_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.vert">
+      <Filter>sources\shaders\4. advanced_opengl\4.2 stencil_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.2 stencil_testing</Filter>
     </None>
   </ItemGroup>
 </Project>

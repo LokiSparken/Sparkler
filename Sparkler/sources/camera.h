@@ -10,7 +10,7 @@
 class Camera
 {
 private:
-	float moveSpeed_, rotateSensitivity_;
+	float rotateSensitivity_;
 	float yaw_, pitch_;
 	float fov_;
 
@@ -22,8 +22,10 @@ private:
 	void updateViewMatrix();
 
 public:
+	float moveSpeed;
+	//static float moveSpeed;
+
 	Camera(glm::vec3 position);
-	
 	float getFov();
 	float getRotateSensitivity();
 	glm::vec3 getPosition();
@@ -31,6 +33,7 @@ public:
 	glm::mat4 getViewMatrix();
 	
 	void setFov(float fov);
+	void setSpeed(float speed);
 	void setPosition(glm::vec3 position);
 	void setViewMatrix();
 	void setViewMatrix(glm::mat4 view);
@@ -46,6 +49,8 @@ public:
 	void scrollCursor(float offset);
 };
 
+//float Camera::moveSpeed = 0.2f;
+
 //void Camera::constructViewMatrix()
 //{
 //	glm::vec3 stareAt = position_ - center_;
@@ -57,7 +62,7 @@ public:
 
 Camera::Camera(glm::vec3 position)
 {
-	moveSpeed_ = 0.2f;
+	moveSpeed = 0.2f;
 	rotateSensitivity_ = 0.1f;
 	yaw_ = -90.0f, pitch_ = 0.0f;
 	fov_ = 45.0f;
@@ -127,6 +132,11 @@ void Camera::setFov(float fov)
 		fov_ = 60.0f;
 }
 
+void Camera::setSpeed(float speed)
+{
+	moveSpeed = speed;
+}
+
 void Camera::setPosition(glm::vec3 position)
 {
 	position_ = position;
@@ -144,27 +154,27 @@ void Camera::setViewMatrix(glm::mat4 view)
 
 void Camera::moveForward(float scale)
 {
-	position_ += moveSpeed_ * front_ * scale;
+	position_ += moveSpeed * front_ * scale;
 	updateViewMatrix();
 }
 
 void Camera::moveBackward(float scale)
 {
-	position_ -= moveSpeed_ * front_ * scale;
+	position_ -= moveSpeed * front_ * scale;
 	updateViewMatrix();
 }
 
 void Camera::moveRight(float scale)
 {
 	right_ = glm::cross(front_, up_);
-	position_ += moveSpeed_ * right_ * scale;
+	position_ += moveSpeed * right_ * scale;
 	updateViewMatrix();
 }
 
 void Camera::moveLeft(float scale)
 {
 	right_ = glm::cross(front_, up_);
-	position_ -= moveSpeed_ * right_ * scale;
+	position_ -= moveSpeed * right_ * scale;
 	updateViewMatrix();
 }
 
@@ -183,5 +193,6 @@ void Camera::scrollCursor(float offset)
 {
 	setFov(getFov() + offset);
 }
+
 
 #endif // CAMERA_H

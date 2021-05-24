@@ -40,7 +40,7 @@ public:
 	std::vector<Texture> textures;
 
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-	void Draw(Shader shader);
+	void draw(Shader shader);
 
 private:
 	unsigned int VAO, VBO, EBO;
@@ -80,7 +80,7 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader shader)
+void Mesh::draw(Shader shader)
 {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -108,12 +108,12 @@ void Mesh::Draw(Shader shader)
 class Model
 {
 public:
-	Model(const char* path)
-	{
-		loadModel(path);
-	}
+	Model(const char* path);
+	void setModelMatrix(glm::mat4 matrix);
 	void draw(Shader shader);
+	void draw(Shader shader, bool outlining, Shader shaderOutlining);
 private:
+	glm::mat4 modelMatrix;
 	std::string directory;
 	std::vector<Mesh> meshes;
 	std::vector<Texture> texturesLoaded;
@@ -124,10 +124,43 @@ private:
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };
 
+Model::Model(const char* path)
+{
+	loadModel(path);
+}
+
+void Model::setModelMatrix(glm::mat4 matrix)
+{
+	modelMatrix = matrix;
+}
+
 void Model::draw(Shader shader)
 {
+	shader.use();
 	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].Draw(shader);
+		meshes[i].draw(shader);
+}
+
+void Model::draw(Shader shader, bool outlining, Shader shaderOutlining)
+{
+	shader.use();
+	shader.setMat4("model", modelMatrix);
+
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFF);
+	for (unsigned int i = 0; i < meshes.size(); i++)
+		meshes[i].draw(shader);
+
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDisable(GL_DEPTH_TEST);
+	shaderOutlining.use();
+	shaderOutlining.setMat4("model", glm::scale(modelMatrix, glm::vec3(1.1f, 1.1f, 1.1f)));
+	for (unsigned int i = 0; i < meshes.size(); i++)
+		meshes[i].draw(shaderOutlining);
+	glStencilMask(0xFF);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Model::loadModel(std::string path)

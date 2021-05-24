@@ -2,6 +2,8 @@
 #define CONSOLE_H
 
 #include "imgui.h"
+//#include "camera.h"
+#include "global.h"
 
 static void HelpMarker(const char* desc);
 static void showConsoleMenuBar();

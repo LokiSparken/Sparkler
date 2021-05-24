@@ -153,6 +153,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="libs\gl3w\GL\gl3w.c" />
     <ClCompile Include="libs\glad\glad.c" />
+    <ClCompile Include="sources\advanced.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp" />
@@ -206,6 +207,12 @@
     <None Include="sources\shaders\3. model\load_test.vert" />
     <None Include="sources\shaders\3. model\multi_light.frag" />
     <None Include="sources\shaders\3. model\multi_light.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.1 depth_testing\depth_visual.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.1 depth_testing\depth_visual.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.vert" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
   </ItemGroup>

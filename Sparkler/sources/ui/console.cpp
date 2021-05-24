@@ -76,15 +76,33 @@ static void showLoglPlaygroundInputCollapse()
 {
 	if (ImGui::CollapsingHeader("Input Settings"))
 	{
-		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Object");
+		//ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Camera");
+		if (ImGui::TreeNode("Camera"))
+		{
+			{
+				ImGui::InputFloat3("Position", cameraPosition);
+			}
+
+			{
+				//ImGui::SliderFloat("Move Speed", &Camera::moveSpeed, 0.0f, 1.0f, "");
+				ImGui::SliderFloat("Move Speed", &cameraMoveSpeed, 0.0f, 1.0f, "%.2f");
+			}
+
+			ImGui::TreePop();
+		}
 
 		ImGui::Separator();
 
-		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Light");
+		//ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Object");
+		if (ImGui::TreeNode("Object"))
 		{
 			{
-				static float objectColor[3] = { 0.39f, 0.58f, 0.93f };
-				ImGui::ColorEdit3("ObjectColor", objectColor);
+				ImGui::InputFloat3("Position", cameraPosition);
+			}
+
+			{
+				static float objectDiffuse[3] = { 0.39f, 0.58f, 0.93f };
+				ImGui::ColorEdit3("Diffuse Color", objectDiffuse);
 				ImGui::SameLine(); HelpMarker(
 					"TODO: Change color for nothing now.\n"
 					"Click on the color square to open a color picker.\n"
@@ -94,8 +112,8 @@ static void showLoglPlaygroundInputCollapse()
 			}
 
 			{
-				static float lightColor[3] = { 1.0f, 1.0f, 1.0f };
-				ImGui::ColorEdit3("LightColor", lightColor);
+				static float objectSpecular[3] = { 0.39f, 0.58f, 0.93f };
+				ImGui::ColorEdit3("Specular Color", objectSpecular);
 				ImGui::SameLine(); HelpMarker(
 					"TODO: Change color for nothing now.\n"
 					"Click on the color square to open a color picker.\n"
@@ -103,6 +121,44 @@ static void showLoglPlaygroundInputCollapse()
 					"Right-click on the color square to show options.\n"
 					"CTRL+click on individual component to input value.\n");
 			}
+
+			ImGui::TreePop();
+		}
+
+		ImGui::Separator();
+
+		//ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Light");
+		if (ImGui::TreeNode("Light"))
+		{
+			ImGui::Text("List of lights: ");
+
+			ImGui::Button("Add new light");
+			
+			ImGui::InputFloat3("Position", cameraPosition);
+
+			{
+				static float lightDiffuse[3] = { 1.0f, 1.0f, 1.0f };
+				ImGui::ColorEdit3("Diffuse Color", lightDiffuse);
+				ImGui::SameLine(); HelpMarker(
+					"TODO: Change color for nothing now.\n"
+					"Click on the color square to open a color picker.\n"
+					"Click and hold to use drag and drop.\n"
+					"Right-click on the color square to show options.\n"
+					"CTRL+click on individual component to input value.\n");
+			}
+
+			{
+				static float lightSpecular[3] = { 1.0f, 1.0f, 1.0f };
+				ImGui::ColorEdit3("Specular Color", lightSpecular);
+				ImGui::SameLine(); HelpMarker(
+					"TODO: Change color for nothing now.\n"
+					"Click on the color square to open a color picker.\n"
+					"Click and hold to use drag and drop.\n"
+					"Right-click on the color square to show options.\n"
+					"CTRL+click on individual component to input value.\n");
+			}
+			
+			ImGui::TreePop();
 		}
 	}
 }
@@ -111,8 +167,14 @@ static void showLoglPlaygroundAnalysisCollapse()
 {
 	if (ImGui::CollapsingHeader("Analysis"))
 	{
-		ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Average Speed");
+		//ImGui::TextColored(ImVec4(0.39f, 0.58f, 0.93f, 1.0f), "Average Speed");
+		ImGui::Text("Average Speed: ");
+		ImGui::SameLine();
 		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::Text("Objects: ");
+		ImGui::Text("Triangles: ");
+		ImGui::Text("Draw Call: ");
 	}
 }
 
