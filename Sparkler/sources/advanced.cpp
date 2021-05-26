@@ -102,8 +102,8 @@ int GlfwMode()
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	////glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
-	std::string modelPath = "resources/objects/backpack/backpack.obj";
-	//std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
+	//std::string modelPath = "resources/objects/backpack/backpack.obj";
+	std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
 	//std::string modelPath = "resources/objects/planet/planet.obj";
 	//std::string modelPath = "resources/objects/rock/rock.obj";
 	Model model(modelPath.c_str());
@@ -236,12 +236,20 @@ int GlfwMode()
 		//glEnable(GL_DEPTH_TEST);
 
 		// 2. implement in class : Model
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		//glCullFace(GL_FRONT);
+		//glFrontFace(GL_CCW);
+
 		shaderOutlining.use();
 		shaderOutlining.setMat4("view", viewMatrix);
 		shaderOutlining.setMat4("projection", projectionMatrix);
 		model.setModelMatrix(glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
 		model.draw(shader, true, shaderOutlining);
 
+		glDisable(GL_CULL_FACE);
+
+		// blending objects
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
