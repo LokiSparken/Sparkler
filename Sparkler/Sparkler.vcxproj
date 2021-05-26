@@ -213,6 +213,10 @@
     <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.vert" />
     <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.frag" />
     <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\outlining.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\4.3 backup.cpp" />
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\grass.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\grass.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\window.frag" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
   </ItemGroup>

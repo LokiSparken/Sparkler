@@ -55,6 +55,33 @@
     <Filter Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing">
       <UniqueIdentifier>{3b2508bf-c38b-469d-8244-657fb95a43eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.3 blending">
+      <UniqueIdentifier>{981686bf-fb37-4037-927f-34732340f949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.4 face_culling">
+      <UniqueIdentifier>{4b241aee-2bd2-4cd6-8d2d-a82cf3e328f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.5 framebuffers">
+      <UniqueIdentifier>{1413c3ff-da8c-46aa-90a6-5248787b763d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.6 cubemaps">
+      <UniqueIdentifier>{bea11100-d5f9-4088-92f4-77ca5e953cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.7 advanced_data">
+      <UniqueIdentifier>{3ad31870-08df-46d5-8a8a-f53eb45c3c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.8 advanced_glsl">
+      <UniqueIdentifier>{abae37a7-d613-47bc-9f1d-fb05a139f141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.9 geometry_shader">
+      <UniqueIdentifier>{5d65af8f-fb52-4043-b926-55ea7233214f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.10 instancing">
+      <UniqueIdentifier>{558cefd3-1b0d-41df-a3f6-1bac2d591cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\4. advanced_opengl\4.11 anti_aliasing">
+      <UniqueIdentifier>{3a21fd87-d490-4a2e-94fe-712d26195257}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -246,6 +273,18 @@
     </None>
     <None Include="sources\shaders\4. advanced_opengl\4.2 stencil_testing\object.frag">
       <Filter>sources\shaders\4. advanced_opengl\4.2 stencil_testing</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\grass.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.3 blending</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\grass.vert">
+      <Filter>sources\shaders\4. advanced_opengl\4.3 blending</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\window.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.3 blending</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.3 blending\4.3 backup.cpp">
+      <Filter>sources\shaders\4. advanced_opengl\4.3 blending</Filter>
     </None>
   </ItemGroup>
 </Project>

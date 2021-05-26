@@ -146,6 +146,7 @@ void Model::draw(Shader shader, bool outlining, Shader shaderOutlining)
 	shader.use();
 	shader.setMat4("model", modelMatrix);
 
+	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glStencilMask(0xFF);
@@ -159,8 +160,9 @@ void Model::draw(Shader shader, bool outlining, Shader shaderOutlining)
 	shaderOutlining.setMat4("model", glm::scale(modelMatrix, glm::vec3(1.1f, 1.1f, 1.1f)));
 	for (unsigned int i = 0; i < meshes.size(); i++)
 		meshes[i].draw(shaderOutlining);
-	glStencilMask(0xFF);
+
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
 }
 
 void Model::loadModel(std::string path)

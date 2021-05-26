@@ -287,6 +287,18 @@ float planeVertices[] =
 	 5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 };
 
+float transparentVertices[] = 
+{
+	// positions         // texture coords
+	0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+	0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+	1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+	0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+	1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+	1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+};
+
 #endif // CONST_H
 
 

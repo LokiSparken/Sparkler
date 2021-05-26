@@ -10,6 +10,7 @@
 #include "../includes/glm/gtc/matrix_transform.hpp"
 #include "../includes/glm/gtc/type_ptr.hpp"
 
+#include <map>
 #include <cstdio>
 #include <string>
 #include <iostream>
@@ -88,12 +89,18 @@ int GlfwMode()
 	//Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.1 depth_testing/depth_visual.vert", SHADER_PATH + "4. advanced_opengl/4.1 depth_testing/depth_visual.frag");
 	Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.frag");
 	Shader shaderOutlining = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.frag");
+	//Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.frag");
+	Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/window.frag");
 
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_ALWAYS);
 	glDepthFunc(GL_LESS);
 
-	glEnable(GL_STENCIL_TEST);
+	//glEnable(GL_STENCIL_TEST);
+
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	////glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
 	std::string modelPath = "resources/objects/backpack/backpack.obj";
 	//std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
@@ -103,6 +110,15 @@ int GlfwMode()
 
 	unsigned int cubeTexture = loadTexture("resources/textures/marble.jpg");
 	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
+	//unsigned int grassTexture = loadTexture("resources/textures/grass.png", false, GL_CLAMP_TO_EDGE);
+	unsigned int windowTexture = loadTexture("resources/textures/window.png", false, GL_CLAMP_TO_EDGE);
+	
+	std::vector<glm::vec3> transparentRectanglePosition;
+	transparentRectanglePosition.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	transparentRectanglePosition.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	transparentRectanglePosition.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	transparentRectanglePosition.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	transparentRectanglePosition.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
@@ -124,6 +140,19 @@ int GlfwMode()
 	glGenBuffers(1, &planeVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	glBindVertexArray(0);
+
+	// transparent rectangle VAO
+	unsigned int transparentRectangleVAO, transparentRectangleVBO;
+	glGenVertexArrays(1, &transparentRectangleVAO);
+	glBindVertexArray(transparentRectangleVAO);
+	glGenBuffers(1, &transparentRectangleVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, transparentRectangleVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), &transparentVertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -189,6 +218,7 @@ int GlfwMode()
 		// bag
 		// 1. basic implementation
 		//shader.setMat4("model", glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
+		//glEnable(GL_STENCIL_TEST);
 		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		//glStencilMask(0xFF);
@@ -211,6 +241,32 @@ int GlfwMode()
 		shaderOutlining.setMat4("projection", projectionMatrix);
 		model.setModelMatrix(glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
 		model.draw(shader, true, shaderOutlining);
+
+		glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+		shaderTransparent.use();
+		glBindVertexArray(transparentRectangleVAO);
+		//glBindTexture(GL_TEXTURE_2D, grassTexture);
+		glBindTexture(GL_TEXTURE_2D, windowTexture);
+		shaderTransparent.setMat4("view", viewMatrix);
+		shaderTransparent.setMat4("projection", projectionMatrix);
+
+		std::map<float, glm::vec3> renderQueue;
+		for (unsigned int i = 0; i < transparentRectanglePosition.size(); i++)
+		{
+			float distance = -glm::length(camera.getPosition() - transparentRectanglePosition[i]);
+			renderQueue[distance] = transparentRectanglePosition[i];
+		}
+
+		for (auto it = renderQueue.begin(); it != renderQueue.end(); ++it)
+		{
+			modelMatrix = glm::mat4(1.0f);
+			modelMatrix = glm::translate(modelMatrix, it->second);
+			shaderTransparent.setMat4("model", modelMatrix);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
 
 		float currentTime = glfwGetTime();
 		deltaFrameTime = currentTime - lastFrame;

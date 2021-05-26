@@ -5,8 +5,8 @@
 #include "../includes/stb_image.h"
 
 
-unsigned int loadTexture(const char* path, bool flip);
-unsigned int loadTextureFromFile(const char* path, const std::string& directory);
+unsigned int loadTexture(const char* path, bool flip, GLint wrapType);
+unsigned int loadTexture(const char* path, const std::string& directory, bool flip, GLint wrapType);
 
 /**
  * @brief	Load texture from file path. Create and generate the texture. Generate the mipmap. Set the texture wrapping mode. Return the texture ID.
@@ -14,12 +14,12 @@ unsigned int loadTextureFromFile(const char* path, const std::string& directory)
  * 
  * @return	The texture ID
  */
-unsigned int loadTexture(char const* path, bool flip = true)
+unsigned int loadTexture(char const* path, bool flip = true, GLint wrapType = GL_REPEAT)
 {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(flip);
 	int width, height, nrComponents;
 	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
 	if (data)
@@ -36,8 +36,8 @@ unsigned int loadTexture(char const* path, bool flip = true)
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -55,11 +55,11 @@ unsigned int loadTexture(char const* path, bool flip = true)
 /**
  * @brief	Merge filepath with filename to the complete path. Call the texture load function.
  */
-unsigned int loadTexture(const char* path, const std::string& directory)
+unsigned int loadTexture(const char* path, const std::string& directory, bool flip = true, GLint wrapType = GL_REPEAT)
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
 
-	return loadTexture(filename.c_str());
+	return loadTexture(filename.c_str(), flip);
 }
 #endif
