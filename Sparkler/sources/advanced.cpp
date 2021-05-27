@@ -84,33 +84,40 @@ int GlfwMode()
 	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-	//GlobalVariables 
-
 	//Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.1 depth_testing/depth_visual.vert", SHADER_PATH + "4. advanced_opengl/4.1 depth_testing/depth_visual.frag");
 	Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.frag");
 	Shader shaderOutlining = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.frag");
-	//Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.frag");
-	Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/window.frag");
-	//Shader shaderFramebufferTester = Shader(SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.vert", SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.frag");
-	Shader shaderFramebufferKernel = Shader(SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.vert", SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/kernel.frag");
-
+	Shader shaderSkybox = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/skybox.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/skybox.frag");
+	Shader shaderReflect = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.frag");
+	Shader shaderRefract = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_refract.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_refract.frag");
+	
 	std::string modelPath = "resources/objects/backpack/backpack.obj";
-	//std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
+	std::string modelPath2 = "resources/objects/nanosuit/nanosuit.obj";
 	//std::string modelPath = "resources/objects/planet/planet.obj";
 	//std::string modelPath = "resources/objects/rock/rock.obj";
 	Model model(modelPath.c_str());
+	Model model2(modelPath2.c_str());
 
 	unsigned int cubeTexture = loadTexture("resources/textures/marble.jpg");
 	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
-	//unsigned int grassTexture = loadTexture("resources/textures/grass.png", false, GL_CLAMP_TO_EDGE);
-	unsigned int windowTexture = loadTexture("resources/textures/window.png", false, GL_CLAMP_TO_EDGE);
 	
-	std::vector<glm::vec3> transparentRectanglePosition;
-	transparentRectanglePosition.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
-	transparentRectanglePosition.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
-	transparentRectanglePosition.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
-	transparentRectanglePosition.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
-	transparentRectanglePosition.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+	std::vector<std::string> faces
+	{
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg"
+	};
+	std::string cubemapPath = "resources/textures/skybox/";
+	for (int i = 0; i < 6; ++i)
+	{
+		faces[i] = cubemapPath + faces[i];
+		//std::cout << "path: " << faces[i] << std::endl;
+	}
+
+	unsigned int cubemapTexture = loadCubemap(faces, false);
 
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
@@ -118,11 +125,12 @@ int GlfwMode()
 	glBindVertexArray(cubeVAO);
 	glGenBuffers(1, &cubeVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices_with_normal), &cube_vertices_with_normal, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glBindVertexArray(0);
 
 	// plane VAO
@@ -138,58 +146,16 @@ int GlfwMode()
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
 
-	// transparent rectangle VAO
-	unsigned int transparentRectangleVAO, transparentRectangleVBO;
-	glGenVertexArrays(1, &transparentRectangleVAO);
-	glBindVertexArray(transparentRectangleVAO);
-	glGenBuffers(1, &transparentRectangleVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, transparentRectangleVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), &transparentVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	// skybox VAO
+	unsigned int skyboxVAO, skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glBindVertexArray(skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
-
-	// screen quad VAO
-	unsigned int quadVAO, quadVBO;
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindVertexArray(0);
-
-	// framebuffer 1. create framebuffer
-	unsigned int fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	// ATTENTION: the following rendering operations will be redirected and output to the binding framebuffer
-	// framebuffer 2. create attachment
-	unsigned int fboTexture = allocateTexture(GL_CLAMP_TO_EDGE);
-	// framebuffer 3. bind attachment to the fbo
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTexture, 0);
-
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-	// framebuffer 4. check completeness of the fbo
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-	else
-	{
-		std::cout << "ERROR::FRAMEBUFFER::STATUS" << std::endl;
-	}
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -212,18 +178,12 @@ int GlfwMode()
 		glViewport(0, 0, display_w, display_h);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 
 		camera.setSpeed(cameraMoveSpeed);
 		camera.setViewMatrix();
 
-		// framebuffer: before render the scene
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		// framebuffer: draw scene
 		shader.use();
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		glm::mat4 viewMatrix = camera.getViewMatrix();
@@ -232,24 +192,45 @@ int GlfwMode()
 		shader.setMat4("projection", projectionMatrix);
 
 		// floor
-		shader.use();
-		glBindVertexArray(planeVAO);
-		glActiveTexture(GL_TEXTURE0);
-		shader.setInt("textureDiffuse1", 0);
-		glBindTexture(GL_TEXTURE_2D, floorTexture);
-		shader.setMat4("model", modelMatrix);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//shader.use();
+		//glBindVertexArray(planeVAO);
+		//glActiveTexture(GL_TEXTURE0);
+		//shader.setInt("textureDiffuse1", 0);
+		//glBindTexture(GL_TEXTURE_2D, floorTexture);
+		//shader.setMat4("model", modelMatrix);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glBindVertexArray(0);
+
+		// reflect cube
+		shaderReflect.use();
+		glBindVertexArray(cubeVAO);
+		shaderReflect.setMat4("model", glm::translate(modelMatrix, glm::vec3(-1.0f, 0.0f, -1.0f)));
+		shaderReflect.setMat4("view", viewMatrix);
+		shaderReflect.setMat4("projection", projectionMatrix);
+		shaderReflect.setVec3("cameraPosition", camera.getPosition());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
-		// cube
-		shader.use();
+		// refract cube
+		shaderRefract.use();
 		glBindVertexArray(cubeVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		shader.setMat4("model", glm::translate(modelMatrix, glm::vec3(-1.0f, 0.0f, -1.0f)));
+		shaderRefract.setMat4("model", glm::translate(modelMatrix, glm::vec3(-4.0f, 0.0f, -4.0f)));
+		shaderRefract.setMat4("view", viewMatrix);
+		shaderRefract.setMat4("projection", projectionMatrix);
+		shaderRefract.setVec3("cameraPosition", camera.getPosition());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		shader.setMat4("model", glm::translate(modelMatrix, glm::vec3(2.0f, 0.0f, 0.0f)));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		
+		// model2
+		shaderRefract.use();
+		model2.setModelMatrix(glm::translate(modelMatrix, glm::vec3(-8.0f, 0.0f, -8.0f)));
+		shaderRefract.setMat4("view", viewMatrix);
+		shaderRefract.setMat4("projection", projectionMatrix);
+		shaderRefract.setVec3("cameraPosition", camera.getPosition());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		model2.draw(shaderRefract);
 		glBindVertexArray(0);
 		
 		// bag
@@ -258,47 +239,15 @@ int GlfwMode()
 		shaderOutlining.setMat4("projection", projectionMatrix);
 		model.setModelMatrix(glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
 		model.draw(shader, true, shaderOutlining);
-		//model.draw(shader);
 
-		// blending objects
-		glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-
-		shaderTransparent.use();
-		glBindVertexArray(transparentRectangleVAO);
-		//glBindTexture(GL_TEXTURE_2D, grassTexture);
-		glBindTexture(GL_TEXTURE_2D, windowTexture);
-		shaderTransparent.setMat4("view", viewMatrix);
-		shaderTransparent.setMat4("projection", projectionMatrix);
-
-		std::map<float, glm::vec3> renderQueue;
-		for (unsigned int i = 0; i < transparentRectanglePosition.size(); i++)
-		{
-			float distance = -glm::length(camera.getPosition() - transparentRectanglePosition[i]);
-			renderQueue[distance] = transparentRectanglePosition[i];
-		}
-
-		for (auto it = renderQueue.begin(); it != renderQueue.end(); ++it)
-		{
-			modelMatrix = glm::mat4(1.0f);
-			modelMatrix = glm::translate(modelMatrix, it->second);
-			shaderTransparent.setMat4("model", modelMatrix);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-		}
-
-		// framebuffer: back to the default framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// framebuffer: use the texture captured by customized framebuffer
-		//shaderFramebufferTester.use();
-		shaderFramebufferKernel.use();
-		glBindVertexArray(quadVAO);
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_2D, fboTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		// skybox
+		glDepthFunc(GL_LEQUAL);
+		shaderSkybox.use();
+		shaderSkybox.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
+		shaderSkybox.setMat4("projection", projectionMatrix);
+		glBindVertexArray(skyboxVAO);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		float currentTime = glfwGetTime();
 		deltaFrameTime = currentTime - lastFrame;
@@ -310,11 +259,8 @@ int GlfwMode()
 
 	glDeleteVertexArrays(1, &cubeVAO);
 	glDeleteVertexArrays(1, &planeVAO);
-	glDeleteVertexArrays(1, &quadVAO);
 	glDeleteBuffers(1, &cubeVBO);
 	glDeleteBuffers(1, &planeVBO);
-	glDeleteBuffers(1, &quadVBO);
-	glDeleteFramebuffers(1, &fbo);
 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();

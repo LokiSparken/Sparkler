@@ -160,6 +160,7 @@
     <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup.cpp" />
     <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup2.cpp" />
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\4.5 backup.cpp" />
+    <ClCompile Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\4.6 backup.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
     <ClCompile Include="sources\ui\cad.cpp" />
@@ -221,6 +222,12 @@
     <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\framebufferContainer.frag" />
     <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\framebufferContainer.vert" />
     <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\kernel.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\object_reflect.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\object_reflect.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\object_refract.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\object_refract.vert" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\skybox.frag" />
+    <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\skybox.vert" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
   </ItemGroup>
