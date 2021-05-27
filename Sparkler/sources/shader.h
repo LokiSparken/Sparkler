@@ -53,7 +53,9 @@ Shader::Shader(std::string vertexShaderFilePath = DEFAULT_VERTEX_SHADER_PATH, st
 	}
 	catch (std::ifstream::failure e)
 	{
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl
+				  << "VertexShaderFilePath: " << vertexShaderFilePath << std::endl
+				  << "FragmentShaderFilePath: " << fragmentShaderFilePath << std::endl;
 		system("pause");
 	}
 

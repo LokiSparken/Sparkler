@@ -82,7 +82,7 @@ int GlfwMode()
 	// State
 	bool show_demo_window = true;
 	bool show_console_window = true;
-	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+	ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//GlobalVariables 
 
@@ -91,19 +91,11 @@ int GlfwMode()
 	Shader shaderOutlining = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/outlining.frag");
 	//Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.frag");
 	Shader shaderTransparent = Shader(SHADER_PATH + "4. advanced_opengl/4.3 blending/grass.vert", SHADER_PATH + "4. advanced_opengl/4.3 blending/window.frag");
+	//Shader shaderFramebufferTester = Shader(SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.vert", SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.frag");
+	Shader shaderFramebufferKernel = Shader(SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/framebufferContainer.vert", SHADER_PATH + "4. advanced_opengl/4.5 framebuffers/kernel.frag");
 
-	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_ALWAYS);
-	glDepthFunc(GL_LESS);
-
-	//glEnable(GL_STENCIL_TEST);
-
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	////glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-
-	//std::string modelPath = "resources/objects/backpack/backpack.obj";
-	std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
+	std::string modelPath = "resources/objects/backpack/backpack.obj";
+	//std::string modelPath = "resources/objects/nanosuit/nanosuit.obj";
 	//std::string modelPath = "resources/objects/planet/planet.obj";
 	//std::string modelPath = "resources/objects/rock/rock.obj";
 	Model model(modelPath.c_str());
@@ -159,6 +151,46 @@ int GlfwMode()
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
 
+	// screen quad VAO
+	unsigned int quadVAO, quadVBO;
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glBindVertexArray(0);
+
+	// framebuffer 1. create framebuffer
+	unsigned int fbo;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	// ATTENTION: the following rendering operations will be redirected and output to the binding framebuffer
+	// framebuffer 2. create attachment
+	unsigned int fboTexture = allocateTexture(GL_CLAMP_TO_EDGE);
+	// framebuffer 3. bind attachment to the fbo
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTexture, 0);
+
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	// framebuffer 4. check completeness of the fbo
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	else
+	{
+		std::cout << "ERROR::FRAMEBUFFER::STATUS" << std::endl;
+	}
+
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -184,17 +216,22 @@ int GlfwMode()
 		camera.setSpeed(cameraMoveSpeed);
 		camera.setViewMatrix();
 
+		// framebuffer: before render the scene
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		// framebuffer: draw scene
 		shader.use();
-		// view/projection transformations
-		glm::mat4 projectionMatrix = glm::mat4(1.0f);
-		projectionMatrix = glm::perspective(glm::radians(camera.getFov()), 4.0f / 3.0f, 0.1f, 100.0f);
+		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		glm::mat4 viewMatrix = camera.getViewMatrix();
+		glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.getFov()), 4.0f / 3.0f, 0.1f, 100.0f);
 		shader.setMat4("view", viewMatrix);
 		shader.setMat4("projection", projectionMatrix);
-		glm::mat4 modelMatrix = glm::mat4(1.0f);
 
 		// floor
-		glStencilMask(0x00);
 		shader.use();
 		glBindVertexArray(planeVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -205,7 +242,6 @@ int GlfwMode()
 		glBindVertexArray(0);
 
 		// cube
-		glStencilFunc(GL_ALWAYS, 1, 0x00);
 		shader.use();
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -214,40 +250,15 @@ int GlfwMode()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		shader.setMat4("model", glm::translate(modelMatrix, glm::vec3(2.0f, 0.0f, 0.0f)));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
 		
 		// bag
-		// 1. basic implementation
-		//shader.setMat4("model", glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
-		//glEnable(GL_STENCIL_TEST);
-		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-		//glStencilMask(0xFF);
-		//model.draw(shader);
-
-		//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		//glStencilMask(0x00);
-		//glDisable(GL_DEPTH_TEST);
-		//shaderOutlining.use();
-		//shaderOutlining.setMat4("model", glm::scale(modelMatrix, glm::vec3(0.26f, 0.26f, 0.26f)));
-		//shaderOutlining.setMat4("view", viewMatrix);
-		//shaderOutlining.setMat4("projection", projectionMatrix);
-		//model.draw(shaderOutlining);
-		//glStencilMask(0xFF);
-		//glEnable(GL_DEPTH_TEST);
-
-		// 2. implement in class : Model
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		//glCullFace(GL_FRONT);
-		//glFrontFace(GL_CCW);
-
 		shaderOutlining.use();
 		shaderOutlining.setMat4("view", viewMatrix);
 		shaderOutlining.setMat4("projection", projectionMatrix);
 		model.setModelMatrix(glm::scale(modelMatrix, glm::vec3(0.25f, 0.25f, 0.25f)));
 		model.draw(shader, true, shaderOutlining);
-
-		glDisable(GL_CULL_FACE);
+		//model.draw(shader);
 
 		// blending objects
 		glEnable(GL_BLEND);
@@ -276,6 +287,19 @@ int GlfwMode()
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 
+		// framebuffer: back to the default framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// framebuffer: use the texture captured by customized framebuffer
+		//shaderFramebufferTester.use();
+		shaderFramebufferKernel.use();
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, fboTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
 		float currentTime = glfwGetTime();
 		deltaFrameTime = currentTime - lastFrame;
 		lastFrame = currentTime;
@@ -283,6 +307,14 @@ int GlfwMode()
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 	}
+
+	glDeleteVertexArrays(1, &cubeVAO);
+	glDeleteVertexArrays(1, &planeVAO);
+	glDeleteVertexArrays(1, &quadVAO);
+	glDeleteBuffers(1, &cubeVBO);
+	glDeleteBuffers(1, &planeVBO);
+	glDeleteBuffers(1, &quadVBO);
+	glDeleteFramebuffers(1, &fbo);
 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();

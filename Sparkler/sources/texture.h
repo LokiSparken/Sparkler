@@ -4,9 +4,27 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../includes/stb_image.h"
 
+#include "const.h"
 
+unsigned int allocateTexture(GLint wrapType);
 unsigned int loadTexture(const char* path, bool flip, GLint wrapType);
 unsigned int loadTexture(const char* path, const std::string& directory, bool flip, GLint wrapType);
+
+unsigned int allocateTexture(GLint wrapType = GL_REPEAT)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WINDOW_WIDTH, WINDOW_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	return textureID;
+}
 
 /**
  * @brief	Load texture from file path. Create and generate the texture. Generate the mipmap. Set the texture wrapping mode. Return the texture ID.

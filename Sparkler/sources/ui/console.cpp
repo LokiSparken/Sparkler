@@ -85,7 +85,7 @@ static void showLoglPlaygroundInputCollapse()
 
 			{
 				//ImGui::SliderFloat("Move Speed", &Camera::moveSpeed, 0.0f, 1.0f, "");
-				ImGui::SliderFloat("Move Speed", &cameraMoveSpeed, 0.0f, 1.0f, "%.2f");
+				ImGui::SliderFloat("Move Speed", &cameraMoveSpeed, 0.0f, 100.0f, "%.2f");
 			}
 
 			ImGui::TreePop();

@@ -132,6 +132,9 @@
     <ClCompile Include="sources\advanced.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\4.5 backup.cpp">
+      <Filter>sources\shaders\4. advanced_opengl\4.5 framebuffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -285,6 +288,15 @@
     </None>
     <None Include="sources\shaders\4. advanced_opengl\4.3 blending\4.3 backup.cpp">
       <Filter>sources\shaders\4. advanced_opengl\4.3 blending</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\framebufferContainer.vert">
+      <Filter>sources\shaders\4. advanced_opengl\4.5 framebuffers</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\framebufferContainer.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.5 framebuffers</Filter>
+    </None>
+    <None Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\kernel.frag">
+      <Filter>sources\shaders\4. advanced_opengl\4.5 framebuffers</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -137,6 +137,7 @@ void Model::setModelMatrix(glm::mat4 matrix)
 void Model::draw(Shader shader)
 {
 	shader.use();
+	shader.setMat4("model", modelMatrix);
 	for (unsigned int i = 0; i < meshes.size(); i++)
 		meshes[i].draw(shader);
 }
@@ -157,12 +158,12 @@ void Model::draw(Shader shader, bool outlining, Shader shaderOutlining)
 	glStencilMask(0x00);
 	glDisable(GL_DEPTH_TEST);
 	shaderOutlining.use();
-	shaderOutlining.setMat4("model", glm::scale(modelMatrix, glm::vec3(1.1f, 1.1f, 1.1f)));
+	shaderOutlining.setMat4("model", glm::scale(modelMatrix, glm::vec3(1.05f, 1.05f, 1.05f)));
 	for (unsigned int i = 0; i < meshes.size(); i++)
 		meshes[i].draw(shaderOutlining);
 
-	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Model::loadModel(std::string path)
