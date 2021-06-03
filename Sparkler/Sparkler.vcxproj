@@ -162,6 +162,7 @@
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\4.5 backup.cpp" />
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\4.6 backup.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
+    <ClCompile Include="sources\spheremap.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
     <ClCompile Include="sources\ui\cad.cpp" />
   </ItemGroup>
@@ -230,6 +231,10 @@
     <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\skybox.vert" />
     <None Include="sources\shaders\default_fragment_shader.frag" />
     <None Include="sources\shaders\default_vertex_shader.vert" />
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map.frag" />
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map.vert" />
+    <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.frag" />
+    <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 
+#define M_PI       3.14159265358979323846   // pi
+#define M_PI_2     1.57079632679489661923   // pi/2
+
 const int WINDOW_WIDTH = 1440, WINDOW_HEIGHT = 900;
 
 const int BACKEND_MODE_GLFW = 1;
@@ -22,6 +25,20 @@ const std::string DEFAULT_VERTEX_SHADER_PATH = "sources/shaders/default_vertex_s
 const std::string DEFAULT_FRAGMENT_SHADER_PATH = "sources/shaders/default_fragment_shader.frag";
 
 const float SENSITIVITY = 0.1f;
+
+enum TextureType
+{
+	textureType_NONE = 0,
+	textureType_DIFFUSE = 1,
+	textureType_SPECULAR = 2,
+	textureType_AMBIENT = 3,
+	textureType_NORMAL = 4,
+	textureType_HEIGHT = 5,
+	textureType_EMISSIVE = 6,
+	textureType_OPACITY = 7,
+	textureType_SHININESS = 8,
+	textureType_DISPLACEMENT = 9
+};
 
 float vertices_position[] =
 {

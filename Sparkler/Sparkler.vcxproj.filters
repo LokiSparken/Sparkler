@@ -82,6 +82,12 @@
     <Filter Include="sources\shaders\4. advanced_opengl\4.11 anti_aliasing">
       <UniqueIdentifier>{3a21fd87-d490-4a2e-94fe-712d26195257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\shaders\others">
+      <UniqueIdentifier>{d07fbcf9-2c4b-4ccb-b962-29758e8d84bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\shaders\others\sphere_mapping">
+      <UniqueIdentifier>{83d374f6-6590-4c39-8674-e43397883cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -137,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\4.6 backup.cpp">
       <Filter>sources\shaders\4. advanced_opengl\4.6 cubemaps</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\spheremap.cpp">
+      <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +327,18 @@
     </None>
     <None Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\object_refract.frag">
       <Filter>sources\shaders\4. advanced_opengl\4.6 cubemaps</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map.vert">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map.frag">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.vert">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.frag">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
     </None>
   </ItemGroup>
 </Project>
