@@ -186,6 +186,8 @@
     <ClInclude Include="sources\ui\console.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\shaders\others\sphere_mapping\cad_sphere.frag" />
+    <None Include="resources\shaders\others\sphere_mapping\cad_sphere.vert" />
     <None Include="sources\shaders\1. getting_started\texture_mix.frag" />
     <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.frag" />
     <None Include="sources\shaders\2. lighting\2.2 basic_light\cube_lighted.vert" />
@@ -233,6 +235,9 @@
     <None Include="sources\shaders\default_vertex_shader.vert" />
     <None Include="sources\shaders\others\sphere_mapping\sphere_map.frag" />
     <None Include="sources\shaders\others\sphere_mapping\sphere_map.vert" />
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_multi_light.frag" />
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_spot_light.frag" />
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_spot_light.vert" />
     <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.frag" />
     <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.vert" />
   </ItemGroup>

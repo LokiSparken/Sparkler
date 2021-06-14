@@ -340,5 +340,20 @@
     <None Include="sources\shaders\others\sphere_mapping\texture_load_tester.frag">
       <Filter>sources\shaders\others\sphere_mapping</Filter>
     </None>
+    <None Include="resources\shaders\others\sphere_mapping\cad_sphere.vert">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="resources\shaders\others\sphere_mapping\cad_sphere.frag">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_spot_light.frag">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_spot_light.vert">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
+    <None Include="sources\shaders\others\sphere_mapping\sphere_map_with_multi_light.frag">
+      <Filter>sources\shaders\others\sphere_mapping</Filter>
+    </None>
   </ItemGroup>
 </Project>

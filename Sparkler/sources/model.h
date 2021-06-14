@@ -311,6 +311,7 @@ public:
 	Sphere(float radius, unsigned int rings, unsigned int sectors, std::vector<std::string> texturesPath);
 	void initSphere();
 	void loadSphereMap(std::string path);
+	void loadSphereMap(std::string diffuseMap, std::string specularMap);
 	void setModelMatrix(glm::mat4 matrix);
 	void draw(Shader shader);
 private:
@@ -437,6 +438,20 @@ void Sphere::loadSphereMap(std::string path)
 	sphereMapTexture = loadTexture(path.c_str(), false);
 }
 
+void Sphere::loadSphereMap(std::string diffuseMap, std::string specularMap)
+{
+	Texture texture;
+	texture.id = loadTexture(diffuseMap.c_str(), false, GL_CLAMP_TO_EDGE);
+	texture.type = "textureDiffuse";
+	texture.path = diffuseMap;
+	textures.push_back(texture);
+
+	texture.id = loadTexture(specularMap.c_str());
+	texture.type = "textureSpecular";
+	texture.path = specularMap;
+	textures.push_back(texture);
+}
+
 void Sphere::setModelMatrix(glm::mat4 matrix)
 {
 	modelMatrix = matrix;
@@ -480,13 +495,13 @@ void Sphere::draw(Shader shader)
 	shader.use();
 	shader.setMat4("model", modelMatrix);
 
-	if (sphereMapTexture != 0)
-	{
-		//std::cout << sphereMapTexture << std::endl;
-		glActiveTexture(GL_TEXTURE0);
-		shader.setInt("skybox_sphereMap", 0);
-		glBindTexture(GL_TEXTURE_2D, sphereMapTexture);
-	}
+	//if (sphereMapTexture != 0)
+	//{
+	//	//std::cout << sphereMapTexture << std::endl;
+	//	glActiveTexture(GL_TEXTURE0);
+	//	shader.setInt("skybox_sphereMap", 0);
+	//	glBindTexture(GL_TEXTURE_2D, sphereMapTexture);
+	//}
 
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -501,7 +516,7 @@ void Sphere::draw(Shader shader)
 		else if (textureType == "textureSpecular")
 			textureIndex = std::to_string(specularNr++);
 
-		shader.setFloat(("material." + textureType + textureIndex).c_str(), i);
+		shader.setInt(("material." + textureType + textureIndex).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 	glActiveTexture(GL_TEXTURE0);

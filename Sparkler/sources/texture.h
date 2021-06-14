@@ -59,6 +59,7 @@ unsigned int loadTexture(char const* path, bool flip = true, GLint wrapType = GL
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		std::cout << "Texture load success: " << path << std::endl;
 		stbi_image_free(data);
 	}
 	else

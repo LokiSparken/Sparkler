@@ -84,23 +84,35 @@ int GlfwMode()
 	bool show_console_window = true;
 	ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-	Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.frag");
-	Shader shaderReflect = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.frag");
-	Shader shaderSphereMapLoadTester = Shader(SHADER_PATH + "others/sphere_mapping/texture_load_tester.vert", SHADER_PATH + "others/sphere_mapping/texture_load_tester.frag");
-	Shader shaderSphereMap = Shader(SHADER_PATH + "others/sphere_mapping/sphere_map.vert", SHADER_PATH + "others/sphere_mapping/sphere_map.frag");
+	//Shader shader = Shader(SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.vert", SHADER_PATH + "4. advanced_opengl/4.2 stencil_testing/object.frag");
+	Shader shaderSkybox = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/skybox.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/skybox.frag");
+	//Shader shaderReflect = Shader(SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.vert", SHADER_PATH + "4. advanced_opengl/4.6 cubemaps/object_reflect.frag");
+	//Shader shaderSphereMapLoadTester = Shader(SHADER_PATH + "others/sphere_mapping/texture_load_tester.vert", SHADER_PATH + "others/sphere_mapping/texture_load_tester.frag");
+	//Shader shaderSphereMap = Shader(SHADER_PATH + "others/sphere_mapping/sphere_map.vert", SHADER_PATH + "others/sphere_mapping/sphere_map.frag");
+	//Shader shaderSphereMapWithSpotLight = Shader(SHADER_PATH + "others/sphere_mapping/sphere_map_with_spot_light.vert", SHADER_PATH + "others/sphere_mapping/sphere_map_with_spot_light.frag");
+	Shader shaderSphereMapWithMultiLight = Shader(SHADER_PATH + "others/sphere_mapping/sphere_map_with_spot_light.vert", SHADER_PATH + "others/sphere_mapping/sphere_map_with_multi_light.frag");
 	
-	std::string modelPath = "resources/objects/backpack/backpack.obj";
-	//std::string modelPath2 = "resources/objects/nanosuit/nanosuit.obj";
-	//std::string modelPath = "resources/objects/planet/planet.obj";
-	//std::string modelPath = "resources/objects/rock/rock.obj";
-	Model model(modelPath.c_str());
-	//Model model2(modelPath2.c_str());
+	//std::string modelPath = "resources/objects/backpack/backpack.obj";
+	//Model model(modelPath.c_str());
 
-	unsigned int cubeTexture = loadTexture("resources/textures/marble.jpg");
-
-	std::string spheremapPath = "resources/textures/skybox/Stellarium3.jpg";
-	//std::string spheremapPath = "resources/textures/skybox/1/back.jpg";
-	unsigned int spheremapTexture = loadTexture(spheremapPath.c_str());
+	std::vector<std::string> faces
+	{
+		"right",
+		"left",
+		"top",
+		"bottom",
+		"front",
+		"back"
+	};
+	std::string cubemapPath = "resources/textures/skybox/5/";
+	std::string fileExtension = ".jpg";
+	for (int i = 0; i < 6; ++i)
+	{
+		faces[i] = cubemapPath + faces[i] + fileExtension;
+		std::cout << "path: " << faces[i] << std::endl;
+	}
+	
+	unsigned int cubemapTexture = loadCubemap(faces, false);
 
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
@@ -117,9 +129,55 @@ int GlfwMode()
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
 
-	Sphere sphere(1.0f, 50, 50);
-	sphere.loadSphereMap(spheremapPath);
+	//std::string spheremapPath = "resources/textures/skybox/Stellarium3.jpg";
+	//unsigned int spheremapTexture = loadTexture(spheremapPath.c_str(), false, GL_CLAMP_TO_EDGE);
+
+	std::string diffuseMapPath("resources/textures/skybox/8k_sun.jpg");
+	std::string specularMapPath("resources/textures/skybox/8k_sun.jpg");
+
+	std::vector<std::string> sphereTexturesDiffuse =
+	{
+		"resources/textures/skybox/Stellarium3.jpg",
+		"resources/textures/skybox/8k_earth_daymap.jpg",
+		"resources/textures/skybox/ball1.jpg",
+		"resources/textures/skybox/8k_jupiter.jpg",
+		"resources/textures/skybox/2k_neptune.jpg",
+		"resources/textures/skybox/8k_venus_surface.jpg",
+		"resources/textures/skybox/8k_saturn.jpg",
+		"resources/textures/skybox/4k_venus_atmosphere.jpg",
+		"resources/textures/skybox/8k_mars.jpg"
+	};
+
+	std::vector<std::string> sphereTexturesSpecular =
+	{
+		"resources/textures/skybox/Stellarium3.jpg",
+		"resources/textures/skybox/8k_earth_nightmap.jpg",
+		"resources/textures/skybox/ball1.jpg",
+		"resources/textures/skybox/8k_jupiter.jpg",
+		"resources/textures/skybox/2k_neptune.jpg",
+		"resources/textures/skybox/8k_venus_surface.jpg",
+		"resources/textures/skybox/8k_saturn.jpg",
+		"resources/textures/skybox/4k_venus_atmosphere.jpg",
+		"resources/textures/skybox/8k_mars.jpg"
+	};
+	
+	Sphere sphere(3.5f, 128, 128);
+	sphere.loadSphereMap(diffuseMapPath, specularMapPath);
 	sphere.initSphere();
+
+	std::vector<Sphere> spheres;
+	for (int i = 0; i < OBJECT_NUMBER - 1; ++i)
+	{
+		Sphere sphere(1.5f, 128, 128);
+		sphere.loadSphereMap(sphereTexturesDiffuse[i], sphereTexturesSpecular[i]);
+		sphere.initSphere();
+		spheres.push_back(sphere);
+	}
+
+	glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
+
+	camera.setSpeed(2.5f);
+	camera.setPosition(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -147,47 +205,92 @@ int GlfwMode()
 
 		camera.setSpeed(cameraMoveSpeed);
 		camera.setViewMatrix();
-		//camera.setViewMatrix(glm::rotate(camera.getViewMatrix(), glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-
-		shader.use();
+		
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		glm::mat4 viewMatrix = camera.getViewMatrix();
 		glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.getFov()), 4.0f / 3.0f, 0.1f, 100.0f);
-		shader.setMat4("view", viewMatrix);
-		shader.setMat4("projection", projectionMatrix);
 
-		// reflect cube
-		//shaderReflect.use();
-		//glBindVertexArray(cubeVAO);
-		//shaderReflect.setMat4("model", glm::translate(modelMatrix, glm::vec3(-1.0f, 0.0f, -1.0f)));
-		//shaderReflect.setMat4("view", viewMatrix);
-		//shaderReflect.setMat4("projection", projectionMatrix);
-		//shaderReflect.setVec3("cameraPosition", camera.getPosition());
-		//glBindTexture(GL_TEXTURE_2D, spheremapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-
-		// sphere map load tester
-		//shaderSphereMapLoadTester.use();
-		//glBindVertexArray(cubeVAO);
-		//shaderSphereMapLoadTester.setMat4("model", glm::translate(modelMatrix, glm::vec3(-1.0f, 0.0f, -1.0f)));
-		//shaderSphereMapLoadTester.setMat4("view", viewMatrix);
-		//shaderSphereMapLoadTester.setMat4("projection", projectionMatrix);
-		//shaderSphereMapLoadTester.setVec3("cameraPosition", camera.getPosition());
-		//glBindTexture(GL_TEXTURE_2D, spheremapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
+		// skybox cube
+		glDepthFunc(GL_LEQUAL);
+		shaderSkybox.use();
+		shaderSkybox.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
+		shaderSkybox.setMat4("projection", projectionMatrix);
+		glBindVertexArray(cubeVAO);
+		glBindTexture(GL_TEXTURE_2D, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// sphere map
 		glDepthFunc(GL_LEQUAL);
-		shaderSphereMap.use();
-		shaderSphereMap.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
-		shaderSphereMap.setMat4("projection", projectionMatrix);
-		sphere.setModelMatrix(glm::rotate(modelMatrix, glm::radians((float)glfwGetTime() * 5.0f), glm::vec3(0.5f, 1.0f, 0.0f)));
-		sphere.draw(shader);
-		//glBindVertexArray(sphere.VAO);
-		//glBindTexture(GL_TEXTURE_2D, spheremapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		shaderSphereMapWithMultiLight.use();
+		shaderSphereMapWithMultiLight.setMat4("view", viewMatrix);
+		shaderSphereMapWithMultiLight.setMat4("projection", projectionMatrix);
+		shaderSphereMapWithMultiLight.setVec3("viewPosition", camera.getPosition());
+		shaderSphereMapWithMultiLight.setFloat("material.shininess", 4.0f);
+		// directional light
+		shaderSphereMapWithMultiLight.setVec3("directionalLight.direction", -0.2f, -1.0f, -0.3f);
+		shaderSphereMapWithMultiLight.setVec3("directionalLight.ambient", 0.33f, 0.33f, 0.33f);
+		shaderSphereMapWithMultiLight.setVec3("directionalLight.diffuse", 0.5f, 0.5f, 0.5f);
+		shaderSphereMapWithMultiLight.setVec3("directionalLight.specular", 0.2f, 0.2f, 0.2f);
+		// point light
+		for (unsigned int i = 0; i < NR_POINT_LIGHTS; ++i)
+		{
+			std::string name = "pointLights[" + std::to_string(i) + std::string("].");
+			//std::cout << name << std::endl;
+			shaderSphereMapWithMultiLight.setVec3(name + "position", pointLightPositions[i]);
+			shaderSphereMapWithMultiLight.setVec3(name + "ambient", 0.065f, 0.065f, 0.065f);
+			shaderSphereMapWithMultiLight.setVec3(name + "diffuse", 0.15f, 0.15f, 0.15f);
+			shaderSphereMapWithMultiLight.setVec3(name + "specular", 0.1f, 0.1f, 0.1f);
+			shaderSphereMapWithMultiLight.setFloat(name + "constant", 1.0f);
+			shaderSphereMapWithMultiLight.setFloat(name + "linear", 0.09f);
+			shaderSphereMapWithMultiLight.setFloat(name + "quadratic", 0.032f);
+		}
+		//shaderSphereMapWithMultiLight.setVec3("pointLight.position", lightPosition);
+		//shaderSphereMapWithMultiLight.setVec3("pointLight.ambient", 0.33f, 0.33f, 0.33f);
+		//shaderSphereMapWithMultiLight.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
+		//shaderSphereMapWithMultiLight.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
+		//shaderSphereMapWithMultiLight.setFloat("pointLight.constant", 1.0f);
+		//shaderSphereMapWithMultiLight.setFloat("pointLight.linear", 0.09f);
+		//shaderSphereMapWithMultiLight.setFloat("pointLight.quadratic", 0.032f);
+		// spot light
+		shaderSphereMapWithMultiLight.setVec3("spotLight.ambient", 0.33f, 0.33f, 0.33f);
+		shaderSphereMapWithMultiLight.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+		shaderSphereMapWithMultiLight.setVec3("spotLight.specular", 0.01f, 0.01f, 0.01f);
+		shaderSphereMapWithMultiLight.setVec3("spotLight.position", camera.getPosition());
+		shaderSphereMapWithMultiLight.setVec3("spotLight.direction", camera.getFront());
+		shaderSphereMapWithMultiLight.setFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
+		shaderSphereMapWithMultiLight.setFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
+		shaderSphereMapWithMultiLight.setFloat("spotLight.constant", 1.0f);
+		shaderSphereMapWithMultiLight.setFloat("spotLight.linear", 0.09f);
+		shaderSphereMapWithMultiLight.setFloat("spotLight.quadratic", 0.032f);
+
+		modelMatrix = glm::mat4(1.0f);
+		modelMatrix = glm::rotate(modelMatrix, glm::radians((float)glfwGetTime() * 6.15f), glm::vec3(0.0f, 1.0f, 0.0f));
+		sphere.setModelMatrix(glm::rotate(modelMatrix, glm::radians(-30.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		sphere.draw(shaderSphereMapWithMultiLight);
+
+		for (int i = 0; i < OBJECT_NUMBER - 1; ++i)
+		{
+			glm::mat4 modelMatrix(1.0f);
+			modelMatrix = glm::translate(modelMatrix, cubePositions[i+1]);
+			modelMatrix = glm::rotate(modelMatrix, glm::radians((float)glfwGetTime() * 12.3f), glm::vec3(0.0f, 1.0f, 0.0f));
+			//shaderSphereMapWithMultiLight.setMat4("model", modelMatrix);
+			spheres[i].setModelMatrix(modelMatrix);
+			
+			for (int j = 0; j < NR_POINT_LIGHTS; ++j)
+			{
+				std::string name = "pointLights[" + std::to_string(j) + std::string("].");
+				//std::cout << name << std::endl;
+				shaderSphereMapWithMultiLight.setVec3(name + "position", pointLightPositions[j]);
+				shaderSphereMapWithMultiLight.setVec3(name + "ambient", 0.065f, 0.065f, 0.065f);
+				shaderSphereMapWithMultiLight.setVec3(name + "diffuse", 0.15f, 0.15f, 0.15f);
+				shaderSphereMapWithMultiLight.setVec3(name + "specular", 0.1f, 0.1f, 0.1f);
+				shaderSphereMapWithMultiLight.setFloat(name + "constant", 1.0f);
+				shaderSphereMapWithMultiLight.setFloat(name + "linear", 0.09f);
+				shaderSphereMapWithMultiLight.setFloat(name + "quadratic", 0.032f);
+
+				spheres[i].draw(shaderSphereMapWithMultiLight);
+			}
+		}
 
 		float currentTime = glfwGetTime();
 		deltaFrameTime = currentTime - lastFrame;
