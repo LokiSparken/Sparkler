@@ -153,7 +153,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="libs\gl3w\GL\gl3w.c" />
     <ClCompile Include="libs\glad\glad.c" />
-    <ClCompile Include="sources\advanced.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="sources\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="sources\shaders\2. lighting\2.4 lighting_maps\2.4 backup.cpp" />
@@ -162,7 +161,6 @@
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\4.5 backup.cpp" />
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\4.6 backup.cpp" />
     <ClCompile Include="sources\sparkler.cpp" />
-    <ClCompile Include="sources\spheremap.cpp" />
     <ClCompile Include="sources\ui\console.cpp" />
     <ClCompile Include="sources\ui\cad.cpp" />
   </ItemGroup>

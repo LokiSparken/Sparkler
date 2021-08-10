@@ -135,17 +135,11 @@
     <ClCompile Include="sources\shaders\2. lighting\2.5 casters\2.5 backup2.cpp">
       <Filter>sources\shaders\2. lighting\2.5 casters</Filter>
     </ClCompile>
-    <ClCompile Include="sources\advanced.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.5 framebuffers\4.5 backup.cpp">
       <Filter>sources\shaders\4. advanced_opengl\4.5 framebuffers</Filter>
     </ClCompile>
     <ClCompile Include="sources\shaders\4. advanced_opengl\4.6 cubemaps\4.6 backup.cpp">
       <Filter>sources\shaders\4. advanced_opengl\4.6 cubemaps</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\spheremap.cpp">
-      <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
